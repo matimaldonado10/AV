@@ -19,7 +19,7 @@ function verificarContrasena($RegistroUsuario, $contrasena)
     $pass = FALSE;
     $password = $contrasena;
 
-    if (password_verify($password, $RegistroUsuario[0]["Contrasena"]))
+    if ($password == $RegistroUsuario[0]["Contrasena"])
     {
       $pass = true;
 
