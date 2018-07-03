@@ -14,6 +14,7 @@ $RegistroSupervisor = $userlogin->getSupervisor($username);
 $RegistroRepartidor = $userlogin->getRepartidor($username);
 
 $response = new stdClass();
+$data = new stdClass();
 $response->exito = false;
 
 
@@ -109,10 +110,11 @@ if ($login)
       else
       {
         // code...
-        //$response->id = $RegistroRepartidor[0]["Persona_IdRepartidor"];
+        $data->id = $RegistroRepartidor[0]["Persona_IdRepartidor"];
         $dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
-        $response->msj = "repartidor";
-        $response->nuevo = $RegistroRepartidor;
+        $data->dni = $dni;
+        $data->msj = "repartidor";
+        //$data->usuario = $RegistroRepartidor;
 
         $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
 
@@ -149,7 +151,7 @@ if ($login)
         print_r($RegistroClientesRepartidor);
         echo "<br>";
         */
-        $response->clientes = $RegistroClientesRepartidor;
+        $data->clientes = $RegistroClientesRepartidor;
 
 
 
@@ -163,6 +165,7 @@ else
   //$response["repartidor"]= $RegistroRepartidor;
 }
 
+$response->data = $data;
 //echo json_encode($response,JSON_UNESCAPED_UNICODE);
 echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 /*
