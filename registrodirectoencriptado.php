@@ -12,12 +12,19 @@
         global $connect, $id, $dni, $username, $password;
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
         $statement = mysqli_prepare($connect, 'INSERT INTO supervisor (Persona_IdSupervisor, Persona_DNISupervisor, Usuario, Contrasena) VALUES (?,?,?,?)') or die("no prepara la sentencia");
+      //  $statement = mysqli_prepare($connect, 'INSERT INTO repartidor (Persona_IdRepartidor, Persona_DNIRepartidor, Usuario, Contrasena) VALUES (?,?,?,?)') or die("no prepara la sentencia");
 
 
         mysqli_stmt_bind_param($statement, 'iiss', $id, $dni, $username, $passwordHash) or die("ssss");
         mysqli_stmt_execute($statement);
         mysqli_stmt_close($statement);
-echo ($passwordHash);
+
+
+        echo "<br>";
+        echo ($password);
+        echo "<br>";
+        //print_r($registrosRepartidores);
+        echo ($passwordHash);
 
     }
 

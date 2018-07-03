@@ -9,8 +9,8 @@ $userlogin = new buscarUsuario();
 $RegistroSupervisor = $userlogin->getSupervisor($username);
 $RegistroRepartidor = $userlogin->getRepartidor($username);
 
-$response = array();
-$response["exito"] = false;
+$response = new stdClass();
+$response->exito = false;
 
 
 function verificarContrasena($RegistroUsuario, $contrasena)
@@ -48,7 +48,7 @@ if ($password!= NULL && $username!= NULL) {
     {
       // code...
       $login=false;
-      $response["msj"]= "Usuario o Contraseña incorrecta";
+      $response->msj = "Usuario o Contraseña incorrecta";
 
     }
 }
@@ -56,7 +56,7 @@ else
 {
   // code...
   $login=false;
-  $response["msj"]= "Contraseña o Usuario nulo";
+  $response->msj= "Contraseña o Usuario nulo";
 
 }
 
@@ -93,27 +93,30 @@ else
 if ($login)
 {
   // code...
-  $response["exito"] = true;
+  $response->exito = true;
       if ($usr == "sup")
       {
         // code...
-        $response["id"] = $RegistroSupervisor[0]["Persona_IdSupervisor"];
-        $response["dni"] = $RegistroSupervisor[0]["Persona_DNISupervisor"];
-        $response["msj"] = "supervisor";
+        //$response->id = $RegistroSupervisor[0]["Persona_IdSupervisor"];
+        //$response->dni = $RegistroSupervisor[0]["Persona_DNISupervisor"];
+        $response->msj = "supervisor";
+        $response->nuevo = $RegistroSupervisor;
       }
       else
       {
         // code...
-        $response["id"] = $RegistroRepartidor[0]["Persona_IdRepartidor"];
-        $response["dni"] = $RegistroRepartidor[0]["Persona_DNIRepartidor"];
-        $response["msj"] = "repartidor";
+        //$response->id = $RegistroRepartidor[0]["Persona_IdRepartidor"];
+        //$response->dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
+        $response->msj = "repartidor";
+        $response->nuevo = $RegistroRepartidor;
+
       }
 }
 else
 {
   // code...
-  $response["exito"] = false;
-  $response["msj"] = "Usuario o contraseña incorrecta";
+  $response->exito= false;
+  $response->msj= "Usuario o contraseña incorrecta";
   //$response["repartidor"]= $RegistroRepartidor;
 }
 
