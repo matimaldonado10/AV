@@ -4,6 +4,7 @@
  * @Version 1.0
  * @Package Database
  */
+ ini_set('memory_limit', '64M');
 class Database{
 	/*
 	 * Create variables for credentials to MySQL database

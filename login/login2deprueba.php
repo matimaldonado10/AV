@@ -1,11 +1,15 @@
 <?php
 include_once('buscarUsuario.php');
+include_once('tablas.php');
+
 
 $username = $_POST["usuario"];
 $password = $_POST["contraseña"];
 
 //declaro un objeto de la clase buscarUsuario
 $userlogin = new buscarUsuario();
+$tablas = new tablas();
+
 $RegistroSupervisor = $userlogin->getSupervisor($username);
 $RegistroRepartidor = $userlogin->getRepartidor($username);
 
@@ -106,9 +110,17 @@ if ($login)
       {
         // code...
         //$response->id = $RegistroRepartidor[0]["Persona_IdRepartidor"];
-        //$response->dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
+        $dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
         $response->msj = "repartidor";
         $response->nuevo = $RegistroRepartidor;
+
+        $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
+        echo "<br>";
+        print_r($RegistroClientesRepartidor);
+        echo "<br>";
+        //$response->clientes = $RegistroClientesRepartidor;
+
+
 
       }
 }
@@ -120,5 +132,9 @@ else
   //$response["repartidor"]= $RegistroRepartidor;
 }
 
-echo json_encode($response);
+//echo json_encode($response,JSON_UNESCAPED_UNICODE);
+echo json_encode($response,JSON_UNESCAPED_UNICODE);
+echo json_last_error();
+echo "<br>";
+json_last_error_msg();
 ?>
