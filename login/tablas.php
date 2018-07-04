@@ -98,4 +98,21 @@ class tablas
 
 	}
 */
+
+public function obtenerDiasDeRepartos($dni)
+{
+	$db = new Database();
+	$db->connect();
+
+	$db->select('zonadereparto','Dia, Orden','clientesdirectos__zonadereparto','zonadereparto.Repartidor_Persona_DNIRepartidor="'.$dni.'" AND clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto= zonadereparto.idRutaDeReparto and clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente = persona.IdPersona AND clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND direccion.Persona_IdPersona=persona.IdPersona AND direccion.Persona_DNI=persona.DNI and barrio.IdBarrio=direccion.Barrio_IdBarrio');
+		// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+	$Registros = $db->getResult();
+	$db->disconnect();
+	print_r($Registros, "/n");
+
+	return $Registros;
+
+
+}
+
 }
