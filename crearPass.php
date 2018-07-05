@@ -1,6 +1,6 @@
 <?php
 
-$password = 'marce1485';
+$password = 'gonza5309';
 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
 echo "<br>";
