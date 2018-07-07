@@ -123,9 +123,30 @@ if ($login)
           /*
               Se obtienen todos los clientes del repartidor
           */
-          $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
+        //  $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
+        
+            $RegistroCortoDeClientes = $tablas->obtenerClientesDeRepartidor($dni);
+            echo "<br>";
+            print_r($RegistroCortoDeClientes);
+            echo "<br>";
+          for ($i=0; $i<29; $i++) {
 
-          for ($i=0; $i<count($RegistroClientesRepartidor)-1 ; $i++)
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"] = $RegistroCortoDeClientes[$i]["ClientesDirectos_Persona_IdCliente"];
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"] = $RegistroCortoDeClientes[$i]["ClientesDirectos_Persona_DNICliente"];
+            $RegistroClientesRepartidor[$i]["Apellido"] = $RegistroCortoDeClientes[$i]["Apellido"];
+            $RegistroClientesRepartidor[$i]["Nombre"] = $RegistroCortoDeClientes[$i]["Nombre"];
+            $RegistroClientesRepartidor[$i]["Telefono"] = $RegistroCortoDeClientes[$i]["Telefono"];
+            $RegistroClientesRepartidor[$i]["Email"] = $RegistroCortoDeClientes[$i]["Email"];
+            $RegistroClientesRepartidor[$i]["Direccion"] = $RegistroCortoDeClientes[$i]["Direccion"];
+            $RegistroClientesRepartidor[$i]["Referencia"] = $RegistroCortoDeClientes[$i]["Referencia"];
+            $RegistroClientesRepartidor[$i]["Barrio"] = $RegistroCortoDeClientes[$i]["Barrio"];
+          }
+          echo "<br>";
+          print_r($RegistroClientesRepartidor);
+          echo "<br>";
+
+//count($RegistroClientesRepartidor)-1
+          for ($i=0; $i<count($RegistroClientesRepartidor); $i++)
           {
 
             $RegistroDeDias=$tablas->obtenerDiasDeReparto($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
@@ -156,6 +177,8 @@ if ($login)
             $RegistroClientesRepartidor[$i]["Dia"] = json_encode($RegistroClientesRepartidor[$i]["Dia"], JSON_UNESCAPED_UNICODE);
 
   */
+
+
 
           }
           /*
