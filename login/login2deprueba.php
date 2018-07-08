@@ -18,6 +18,9 @@ $response = new stdClass();
 $data = new stdClass();
 $response->exito = false;
 
+$Dias = array();
+
+
 
 function verificarContrasena($RegistroUsuario, $contrasena)
 {
@@ -123,45 +126,62 @@ if ($login)
           /*
               Se obtienen todos los clientes del repartidor
           */
-        //  $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
+         $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
 
-            $RegistroClientes = $tablas->obtenerClientesDeRepartidor($dni);
+          $RegistroClientes = $tablas->obtenerClientesDeRepartidor($dni);
 /*
             echo "<br>";
             print_r($RegistroCortoDeClientes);
             echo "<br>";
-*/          $Dias = array();
+
+*/
+
+
+// SIRVE PARA QUE EL REGISTRO DE CLIENTES CONTENGA CLIENTES ÚNICOS
+$j=0;
+
             for ($i=0; $i <count($RegistroClientes) ; $i++) {
+
               // code...
-              if ($i=0)
+              if ($i==0)
               {
                 $dniDistinto = $RegistroClientes[$i]["DNI"];
                 $indice = $i;
               }
 
-              if ($dniDistinto=$RegistroClientes[$i]["DNI"]) {
-                array_push ($Dias, $RegistroClientes[$i]["Dia"])
+
+
+              if (strcmp($dniDistinto, $RegistroClientes[$i]["DNI"]) == 0)
+              {
+                $aux = array('Dia' => $RegistroClientes[$i]['Dia']);
+                array_push($Dias,$aux);
+
 
               }
               else
               {
 
-                $RegistroClientesRepartidor[$indice]["IdPersona"] = $RegistroClientesRepartidor[$indice]["IdPersona"];
-                $RegistroClientesRepartidor[$indice]["DNI"] = $RegistroClientesRepartidor[$indice]["DNI"];
-                $RegistroClientesRepartidor[$indice]["Apellido"] = $RegistroClientesRepartidor[$indice]["Apellido"];
-                $RegistroClientesRepartidor[$indice]["Nombre"] = $RegistroClientesRepartidor[$indice]["Nombre"];
-                $RegistroClientesRepartidor[$indice]["Telefono"] = $RegistroClientesRepartidor[$indice]["Telefono"];
-                $RegistroClientesRepartidor[$indice]["Email"] = $RegistroClientesRepartidor[$indice]["Email"];
-                $RegistroClientesRepartidor[$indice]["Direccion"] = $RegistroClientesRepartidor[$indice]["Direccion"];
-                $RegistroClientesRepartidor[$indice]["Referencia"] = $RegistroClientesRepartidor[$indice]["Referencia"];
-                $RegistroClientesRepartidor[$indice]["Barrio"] = $RegistroClientesRepartidor[$indice]["Barrio"];
-                $RegistroClientesRepartidor[$indice]["Dia"] = $Dias;
-
+                $RegistroAuxiliar[$j]["ClientesDirectos_Persona_IdCliente"] = $RegistroClientes[$indice]["IdPersona"];
+                $RegistroAuxiliar[$j]["ClientesDirectos_Persona_DNICliente"] = $RegistroClientes[$indice]["DNI"];
+                $RegistroAuxiliar[$j]["Apellido"] = $RegistroClientes[$indice]["Apellido"];
+                $RegistroAuxiliar[$j]["Nombre"] = $RegistroClientes[$indice]["Nombre"];
+                $RegistroAuxiliar[$j]["Telefono"] = $RegistroClientes[$indice]["Telefono"];
+                $RegistroAuxiliar[$j]["Email"] = $RegistroClientes[$indice]["Email"];
+                $RegistroAuxiliar[$j]["Direccion"] = $RegistroClientes[$indice]["Direccion"];
+                $RegistroAuxiliar[$j]["Referencia"] = $RegistroClientes[$indice]["Referencia"];
+                $RegistroAuxiliar[$j]["Barrio"] = $RegistroClientes[$indice]["Barrio"];
+                $RegistroAuxiliar[$j]["Dia"] = $Dias;
+                $j++;
 
                 $dniDistinto = $RegistroClientes[$i]["DNI"];
                 unset($Dias);
-                array_push ($Dias, $RegistroClientes[$i]["Dia"])
+                unset($aux);
+                $Dias = array();
+                $aux = array('Dia' => $RegistroClientes[$i]['Dia']);
+                array_push($Dias,$aux);
                 $indice = $i;
+
+
 
               }
 
@@ -169,15 +189,28 @@ if ($login)
             }
 
 
+
+
+            echo "<br>";
+            print_r($RegistroClientesRepartidor);
+            echo "<br>";
+
+            echo "<br>";
+            print_r($RegistroAuxiliar);
+            echo "<br>";
+
+
+
 //count($RegistroClientesRepartidor)-1
           for ($i=0; $i<count($RegistroClientesRepartidor); $i++)
           {
 
-            $RegistroDeDias=$tablas->obtenerDiasDeReparto($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
-            $RegistroClientesRepartidor[$i]["Dia"] = $RegistroDeDias;
-
-            $RegistroClientesRepartidor[$i]["IdPersona"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"]);
-            $RegistroClientesRepartidor[$i]["DNI"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
+            //$RegistroDeDias=$tablas->obtenerDiasDeReparto($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
+            //$RegistroClientesRepartidor[$i]["Dia"] = $RegistroDeDias;
+//ClientesDirectos_Persona_IdCliente
+//ClientesDirectos_Persona_DNICliente
+            $RegistroClientesRepartidor[$i]["IdPersona"] = utf8_encode($RegistroClientesRepartidor[$i]["IdPersona"]);
+            $RegistroClientesRepartidor[$i]["DNI"] = utf8_encode($RegistroClientesRepartidor[$i]["DNI"]);
             $RegistroClientesRepartidor[$i]["Apellido"] = utf8_encode($RegistroClientesRepartidor[$i]["Apellido"]);
             $RegistroClientesRepartidor[$i]["Nombre"] = utf8_encode($RegistroClientesRepartidor[$i]["Nombre"]);
             $RegistroClientesRepartidor[$i]["Telefono"] = utf8_encode($RegistroClientesRepartidor[$i]["Telefono"]);
