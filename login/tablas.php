@@ -70,32 +70,83 @@ class tablas
 	{
 		$db = new Database();
 		$db->connect();
+		$where = 'zonadereparto.idRutaDeReparto =  clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto AND  clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio AND  persona.DNI  IN (SELECT DISTINCT persona.DNI FROM zonadereparto JOIN clientesdirectos__zonadereparto JOIN persona JOIN direccion JOIN barrio ON zonadereparto.idRutaDeReparto =  clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto AND clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio WHERE zonadereparto.Repartidor_Persona_DNIRepartidor = "'.$dni.'") ';
 
-		$db->select('zonadereparto','clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente, clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Barrio, zonadereparto.Dia','clientesdirectos__zonadereparto JOIN persona JOIN direccion JOIN barrio','zonadereparto.Repartidor_Persona_DNIRepartidor="'.$dni.'" AND clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto= zonadereparto.idRutaDeReparto and clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente = persona.IdPersona AND clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND direccion.Persona_IdPersona=persona.IdPersona AND direccion.Persona_DNI=persona.DNI and barrio.IdBarrio=direccion.Barrio_IdBarrio');
-			// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->select('persona','DISTINCT persona.IdPersona, persona.DNI, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Barrio, zonadereparto.Dia','direccion JOIN barrio JOIN clientesdirectos__zonadereparto JOIN zonadereparto',$where);
+				// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Registros = $db->getResult();
 		$db->disconnect();
-		print_r($Registros, "/n");
+		//print_r($Registros, "/n");
 
 		return $Registros;
 
 
 	}
-/*
-	public function obtenerClientesDeRepartidor($dni)
+
+	/*
+
+		public function obtenerClientesDeRepartidor($dni)
+
+		{
+
+			$db = new Database();
+
+			$db->connect();
+
+
+
+			$db->select('zonadereparto','ClientesDirectos_Persona_IdCliente, ClientesDirectos_Persona_DNICliente, Apellido, Nombre, Telefono, Email, Direccion, Referencia, Barrio','clientesdirectos__zonadereparto JOIN persona JOIN direccion JOIN barrio JOIN ventas','zonadereparto.Repartidor_Persona_DNIRepartidor="'.$dni.'"');
+
+				// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+
+			$Registros = $db->getResult();
+
+			$db->disconnect();
+
+
+
+
+
+			return $Registros;
+
+
+
+
+
+		}
+
+	*/
+
+	public function obtenerDiasDeReparto($dni)
+
 	{
+
 		$db = new Database();
+
 		$db->connect();
 
-		$db->select('zonadereparto','ClientesDirectos_Persona_IdCliente, ClientesDirectos_Persona_DNICliente, Apellido, Nombre, Telefono, Email, Direccion, Referencia, Barrio','clientesdirectos__zonadereparto JOIN persona JOIN direccion JOIN barrio JOIN ventas','zonadereparto.Repartidor_Persona_DNIRepartidor="'.$dni.'"');
+
+
+		$db->select('zonadereparto','Dia, Orden','clientesdirectos__zonadereparto','clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente="'.$dni.'" AND zonadereparto.idRutaDeReparto = clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto');
+
 			// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+
 		$Registros = $db->getResult();
+
 		$db->disconnect();
+
+		//print_r($Registros, "/n");
+
 
 
 		return $Registros;
 
 
+
+
+
 	}
-*/
+
+
+
 }

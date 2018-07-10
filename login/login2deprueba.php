@@ -5,6 +5,7 @@ include_once('tablas.php');
 
 $username = $_POST["usuario"];
 $password = $_POST["contraseña"];
+$primerLogin= $_POST["intento"];
 
 //declaro un objeto de la clase buscarUsuario
 $userlogin = new buscarUsuario();
@@ -16,6 +17,9 @@ $RegistroRepartidor = $userlogin->getRepartidor($username);
 $response = new stdClass();
 $data = new stdClass();
 $response->exito = false;
+
+$Dias = array();
+
 
 
 function verificarContrasena($RegistroUsuario, $contrasena)
@@ -116,45 +120,135 @@ if ($login)
         $data->msj = "repartidor";
         //$data->usuario = $RegistroRepartidor;
 
-        $RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
-
-        for ($i=0; $i<count($RegistroClientesRepartidor)-1 ; $i++)
+        if (strcmp($primerLogin, "true") == 0) //IGUAL A CERO SIGNIFICA QUE $primerLogin es igual a true, por lo tanto, el usuario se loguea por primera vez
         {
 
 
+          /*
+              Se obtienen todos los clientes del repartidor
+          */
+         //$RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
 
-          $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"]);
-          $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
-          $RegistroClientesRepartidor[$i]["Apellido"] = utf8_encode($RegistroClientesRepartidor[$i]["Apellido"]);
-          $RegistroClientesRepartidor[$i]["Nombre"] = utf8_encode($RegistroClientesRepartidor[$i]["Nombre"]);
-          $RegistroClientesRepartidor[$i]["Telefono"] = utf8_encode($RegistroClientesRepartidor[$i]["Telefono"]);
-          $RegistroClientesRepartidor[$i]["Email"] = utf8_encode($RegistroClientesRepartidor[$i]["Email"]);
-          $RegistroClientesRepartidor[$i]["Direccion"] = utf8_encode($RegistroClientesRepartidor[$i]["Direccion"]);
-          $RegistroClientesRepartidor[$i]["Referencia"] = utf8_encode($RegistroClientesRepartidor[$i]["Referencia"]);
-          $RegistroClientesRepartidor[$i]["Barrio"] = utf8_encode($RegistroClientesRepartidor[$i]["Barrio"]);
-          $RegistroClientesRepartidor[$i]["Dia"] = utf8_encode($RegistroClientesRepartidor[$i]["Dia"]);
-
+          $RegistroClientes = $tablas->obtenerClientesDeRepartidor($dni);
 /*
-          $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"] = json_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"] = json_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Apellido"] = json_encode($RegistroClientesRepartidor[$i]["Apellido"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Nombre"] = json_encode($RegistroClientesRepartidor[$i]["Nombre"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Telefono"] = json_encode($RegistroClientesRepartidor[$i]["Telefono"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Email"] = json_encode($RegistroClientesRepartidor[$i]["Email"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Direccion"] = json_encode($RegistroClientesRepartidor[$i]["Direccion"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Referencia"] = json_encode($RegistroClientesRepartidor[$i]["Referencia"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Barrio"] = json_encode($RegistroClientesRepartidor[$i]["Barrio"], JSON_UNESCAPED_UNICODE);
-          $RegistroClientesRepartidor[$i]["Dia"] = json_encode($RegistroClientesRepartidor[$i]["Dia"], JSON_UNESCAPED_UNICODE);
+            echo "<br>";
+            print_r($RegistroCortoDeClientes);
+            echo "<br>";
 
 */
 
+
+// SIRVE PARA QUE EL REGISTRO DE CLIENTES CONTENGA CLIENTES ÚNICOS
+          $j=0;
+
+            for ($i=0; $i <count($RegistroClientes) ; $i++) {
+
+              // code...
+              if ($i==0)
+              {
+                $dniDistinto = $RegistroClientes[$i]["DNI"];
+                $indice = $i;
+              }
+
+
+
+              if (strcmp($dniDistinto, $RegistroClientes[$i]["DNI"]) == 0)
+              {
+                $aux = array('Dia' => $RegistroClientes[$i]['Dia']);
+                array_push($Dias,$aux);
+
+
+              }
+              else
+              {
+
+                $RegistroClientesRepartidor[$j]["ClientesDirectos_Persona_IdCliente"] = $RegistroClientes[$indice]["IdPersona"];
+                $RegistroClientesRepartidor[$j]["ClientesDirectos_Persona_DNICliente"] = $RegistroClientes[$indice]["DNI"];
+                $RegistroClientesRepartidor[$j]["Apellido"] = $RegistroClientes[$indice]["Apellido"];
+                $RegistroClientesRepartidor[$j]["Nombre"] = $RegistroClientes[$indice]["Nombre"];
+                $RegistroClientesRepartidor[$j]["Telefono"] = $RegistroClientes[$indice]["Telefono"];
+                $RegistroClientesRepartidor[$j]["Email"] = $RegistroClientes[$indice]["Email"];
+                $RegistroClientesRepartidor[$j]["Direccion"] = $RegistroClientes[$indice]["Direccion"];
+                $RegistroClientesRepartidor[$j]["Referencia"] = $RegistroClientes[$indice]["Referencia"];
+                $RegistroClientesRepartidor[$j]["Barrio"] = $RegistroClientes[$indice]["Barrio"];
+                $RegistroClientesRepartidor[$j]["Dia"] = $Dias;
+                $j++;
+
+                $dniDistinto = $RegistroClientes[$i]["DNI"];
+                unset($Dias);
+                unset($aux);
+                $Dias = array();
+                $aux = array('Dia' => $RegistroClientes[$i]['Dia']);
+                array_push($Dias,$aux);
+                $indice = $i;
+
+
+
+              }
+
+
+            }
+
+
+
+/*
+            echo "<br>";
+            print_r($RegistroClientesRepartidor);
+            echo "<br>";
+*/
+
+
+
+//count($RegistroClientesRepartidor)-1
+          for ($i=0; $i<count($RegistroClientesRepartidor); $i++)
+          {
+
+            //$RegistroDeDias=$tablas->obtenerDiasDeReparto($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
+            //$RegistroClientesRepartidor[$i]["Dia"] = $RegistroDeDias;
+//ClientesDirectos_Persona_IdCliente
+//ClientesDirectos_Persona_DNICliente
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"]);
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"] = utf8_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"]);
+            $RegistroClientesRepartidor[$i]["Apellido"] = utf8_encode($RegistroClientesRepartidor[$i]["Apellido"]);
+            $RegistroClientesRepartidor[$i]["Nombre"] = utf8_encode($RegistroClientesRepartidor[$i]["Nombre"]);
+            $RegistroClientesRepartidor[$i]["Telefono"] = utf8_encode($RegistroClientesRepartidor[$i]["Telefono"]);
+            $RegistroClientesRepartidor[$i]["Email"] = utf8_encode($RegistroClientesRepartidor[$i]["Email"]);
+            $RegistroClientesRepartidor[$i]["Direccion"] = utf8_encode($RegistroClientesRepartidor[$i]["Direccion"]);
+            $RegistroClientesRepartidor[$i]["Referencia"] = utf8_encode($RegistroClientesRepartidor[$i]["Referencia"]);
+            $RegistroClientesRepartidor[$i]["Barrio"] = utf8_encode($RegistroClientesRepartidor[$i]["Barrio"]);
+            //$RegistroClientesRepartidor[$i]["Dia"] = utf8_encode($RegistroClientesRepartidor[$i]["Dia"]);
+
+
+  /*
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"] = json_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_IdCliente"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"] = json_encode($RegistroClientesRepartidor[$i]["ClientesDirectos_Persona_DNICliente"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Apellido"] = json_encode($RegistroClientesRepartidor[$i]["Apellido"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Nombre"] = json_encode($RegistroClientesRepartidor[$i]["Nombre"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Telefono"] = json_encode($RegistroClientesRepartidor[$i]["Telefono"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Email"] = json_encode($RegistroClientesRepartidor[$i]["Email"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Direccion"] = json_encode($RegistroClientesRepartidor[$i]["Direccion"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Referencia"] = json_encode($RegistroClientesRepartidor[$i]["Referencia"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Barrio"] = json_encode($RegistroClientesRepartidor[$i]["Barrio"], JSON_UNESCAPED_UNICODE);
+            $RegistroClientesRepartidor[$i]["Dia"] = json_encode($RegistroClientesRepartidor[$i]["Dia"], JSON_UNESCAPED_UNICODE);
+
+  */
+
+
+
+          }
+          /*
+          echo "<br>";
+          print_r($RegistroClientesRepartidor);
+          echo "<br>";
+          */
+          $data->clientes = $RegistroClientesRepartidor;
         }
-        /*
-        echo "<br>";
-        print_r($RegistroClientesRepartidor);
-        echo "<br>";
-        */
-        $data->clientes = $RegistroClientesRepartidor;
+        else
+        {
+          // code...
+        }
+
+
 
 
 
