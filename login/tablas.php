@@ -45,7 +45,7 @@ class tablas
 	{
 		$db = new Database();
 		$db->connect();
-		$db->select('articulo','IdArticulo, Precio',NULL,NULL,'IdArticulo DESC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->select('articulo','IdArticulo, Articulo, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Regristros = $db->getResult();
 		$db->disconnect();
 		return $Regristros;

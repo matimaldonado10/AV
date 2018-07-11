@@ -13,6 +13,7 @@ $tablas = new tablas();
 
 $RegistroSupervisor = $userlogin->getSupervisor($username);
 $RegistroRepartidor = $userlogin->getRepartidor($username);
+$RegistroArticulos = $tablas->obtenerArticulos();
 
 $response = new stdClass();
 $data = new stdClass();
@@ -118,6 +119,7 @@ if ($login)
         $dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
         $data->dni = $dni;
         $data->msj = "repartidor";
+        $data->articulo = $RegistroArticulos;
         //$data->usuario = $RegistroRepartidor;
 
         if (strcmp($primerLogin, "true") == 0) //IGUAL A CERO SIGNIFICA QUE $primerLogin es igual a true, por lo tanto, el usuario se loguea por primera vez
