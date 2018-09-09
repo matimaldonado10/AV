@@ -247,7 +247,7 @@ if ($login)
         }
         else
         {
-          // code...
+          // acá se ejecuta el código que represente el caso de logueo de un repartidor que ya tenga guardado sus datos en la app
         }
 
 
@@ -258,7 +258,7 @@ if ($login)
 }
 else
 {
-  // code...
+  // Si el login es incorrecto ejecuta este código
   $response->exito= false;
   $response->msj= "Usuario o contraseña incorrecta";
   //$response["repartidor"]= $RegistroRepartidor;
