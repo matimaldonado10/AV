@@ -1,0 +1,23 @@
+{  
+    "usuario": {
+          "dni": "22456789",
+            "id": "6"
+          },
+    "data": {
+            "envasesllenos": "2",
+            "envasesvacios": "2",
+            "detalleventa": [
+                  {
+                        "id": 4,
+                        "articulo": "dispenser plastico",
+                        "cantidad": 1
+                  },
+                  {
+                        "id": 3,
+                        "articulo": "canilla",
+                        "cantidad": 1
+                  }
+            ]
+     }
+}
+    
