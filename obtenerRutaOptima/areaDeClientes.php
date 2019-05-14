@@ -1,5 +1,5 @@
 <?php
-include_once ("coordenasGeograficas.php");
+include_once ('coordenadasGeograficas.php');
 class areaDeclientes{
 	private $coordenadaDeInicio;
 	private $coordenadaDeFin;
@@ -11,9 +11,9 @@ class areaDeclientes{
     }
         
 
-	public function crearCoordenadaAleatoria(coordenasGeograficas $ubicacionDeCliente ){
+	public function crearCoordenadaAleatoria(coordenadasGeograficas $ubicacionDeCliente ){
 
-		if (esExistenCoordenadasDeZona()) {
+		if ($this->esExistenCoordenadasDeZona()) {
 			$ubicacionDeCliente->setLatitud($this->crearLatitud());
 			$ubicacionDeCliente->setLongitud($this->crearLongitud());
 			return $ubicacionDeCliente;
@@ -30,25 +30,25 @@ class areaDeclientes{
 	
 	public function crearLatitud()
 	{
-		if (esCoordenadaContieneDecimal($this->coordenadaDeInicio->latitud,$this->coordenadaDeFin->latitud)) {
-			$coordenadaEntera = obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->latitud,$this->coordenadaDeFin->latitud);
+		if ($this->esCoordenadaContieneDecimal($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud())) {
+			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud());
 		
-			$coordenadaDecimal = obtenerCoordenadaValorAleatorio(extraerCoordenadaDecimal($this->coordenadaDeInicio->latitud), extraerCoordenadaDecimal($this->coordenadaDeFin->latitud));
+			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLatitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLatitud()));
 			return floatval('$coordenadaEntera'.'.'.'$coordenadaDecimal');  
 
 		}else {
 
-			$coordenadaEntera = obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->latitud,$this->coordenadaDeFin->latitud);
+			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud());
 			return floatval('$coordenadaEntera');  
 
 		}
 		
 
 	}
-	public function esCoordenadaContieneDecimal($coordenadaDeInicio, $coordenadaDeFin){
+	private function esCoordenadaContieneDecimal($coordenadaDeInicio, $coordenadaDeFin){
 		$flag = false;
-		if ( count($arrayCoordenadas = explode(“.”,$coordenadaDeInicio)) == 2 ){
-			if (count($arrayCoordenadas = explode(“.”,$coordenadaDeFin)) == 2 ) {
+		if ( count($arrayCoordenadas = explode('.',$coordenadaDeInicio)) == 2 ){
+			if (count($arrayCoordenadas = explode('.',$coordenadaDeFin)) == 2 ) {
 				return $flag = true;			
 			}
 		}
@@ -59,15 +59,15 @@ class areaDeclientes{
 	
 	public function crearLongitud()
 	{
-		if (esCoordenadaContieneDecimal($this->coordenadaDeInicio->longitud,$this->coordenadaDeFin->longitud)) {
-			$coordenadaEntera = obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->longitud,$this->coordenadaDeFin->longitud);
+		if ($this->esCoordenadaContieneDecimal($this->coordenadaDeInicio->getLongitud(),$this->coordenadaDeFin->getLongitud())) {
+			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLongitud(),$this->coordenadaDeFin->getLongitud());
 		
-			$coordenadaDecimal = obtenerCoordenadaValorAleatorio(extraerCoordenadaDecimal($this->coordenadaDeInicio->longitud), extraerCoordenadaDecimal($this->coordenadaDeFin->longitud));
+			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLongitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLongitud()));
 			return floatval('$coordenadaEntera'.'.'.'$coordenadaDecimal');  
 
 		}else {
 
-			$coordenadaEntera = obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->latitud,$this->coordenadaDeFin->latitud);
+			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLongitud(),$this->coordenadaDeFin->getLongitud());
 			return floatval('$coordenadaEntera');  
 
 		}	
@@ -76,8 +76,8 @@ class areaDeclientes{
 
 	
 
-	public function extraerCoordenadaDecimal(Double $coordenada){
-		$arrayCoordenadas = explode(“.”,$coordenada);
+	public function extraerCoordenadaDecimal(Float $coordenada){
+		$arrayCoordenadas = explode('.',$coordenada);
 		return intval($arrayCoordenadas[1]) ;
 	}
 
@@ -94,7 +94,7 @@ class areaDeclientes{
 	}
 
 	
-	public function setCoordenadaDeInicio(coordenadaGeografica $coordenadaDeInicio)
+	public function setCoordenadaDeInicio(coordenadasGeograficas $coordenadaDeInicio)
 	{
 		$this->coordenadaDeInicio = $coordenadaDeInicio;
 
@@ -108,7 +108,7 @@ class areaDeclientes{
 	}
 
 	
-	public function setCoordenadaDeFin(coordenadaGeografica $coordenadaDeFin)
+	public function setCoordenadaDeFin(coordenadasGeograficas $coordenadaDeFin)
 	{
 		$this->coordenadaDeFin = $coordenadaDeFin;
 

@@ -12,8 +12,17 @@ class coordenadasGeograficas{
 
 	public static function construirObjetoConLatitudLongitud($latitud, $longitud){
 		$instancia = new self();
-		$instancia->setLatitud($latitud);
-		$instancia->setLongitud($longitud);
+
+		
+
+		if ($instancia->esLatitudValida($latitud) && $instancia->esLongitudValida($longitud)) {
+			$instancia->setLatitud($latitud);
+			$instancia->setLongitud($longitud);
+		}else {
+			# code...
+		}
+
+		
 		return $instancia;
 	}
 
@@ -60,11 +69,14 @@ class coordenadasGeograficas{
 	}
 
 	
-	public function setLatitud(Double $latitud)
+	public function setLatitud(Float $latitud)
 	{
-		if (esLatitudValida($latitud)) {
+		if ($this->esLatitudValida($latitud)) {
 			$this->latitud = $latitud;
 
+		}
+		else {
+			# code...
 		}
 		
 
@@ -78,20 +90,20 @@ class coordenadasGeograficas{
 	}
 
 	
-	public function setLongitud(Double $longitud)
+	public function setLongitud(Float $longitud)
 	{
-		if (esLongitudValida($longitud)) {
+		if ($this->esLongitudValida($longitud)) {
 			$this->longitud = $longitud;
 		}
 		
 		return $this;
 	}
 
-	function esLatitudValida($latitud){
+	private function esLatitudValida($latitud){
 		return ($latitud>-90 && $latitud<90);
 	}
 
-	function esLongitudValida($longitud){
+	private function esLongitudValida($longitud){
 		return ($longitud>-180 && $longitud<180);
 	}
 }
