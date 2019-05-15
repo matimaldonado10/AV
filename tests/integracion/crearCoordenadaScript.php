@@ -5,7 +5,7 @@ include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeogr
 $area = new areaDeClientes();
 $coordenada = new coordenadasGeograficas();
 
-$coordenada = $area->crearCoordenadaAleatoria($coordenada);
+$obj = $area->crearCoordenadaAleatoria($coordenada);
 
-echo $coordenada -> getLatitud()."\n";
-echo $coordenada -> getLongitud()."\n";
+echo $obj -> getLatitud()."\n";
+echo $obj -> getLongitud()."\n";

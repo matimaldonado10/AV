@@ -17,12 +17,12 @@ if (is_array($matriz)) {
         echo "$key2 ";
 
        } 
-       echo "<br>";
+       echo "\n";
     };
 
-    echo "<br>";
+    echo "\n";
     foreach ($recursoOsrm->getCoordenadasDeClientes() as $indice) {
-        echo "$indice<br> ";
+        echo $indice."\n" ;
     }
 
 }else {

@@ -25,10 +25,17 @@ final class prueba extends TestCase
         $areaDeClientes = new areaDeclientes();
         $coordenadas = new coordenadasGeograficas();
 
+        
+
         $this->assertInstanceOf(
             coordenadasGeograficas::class,
-            $areaDeClientes->crearCoordenadaAleatoria($coordenadas)
+            $obj = $areaDeClientes->crearCoordenadaAleatoria($coordenadas)
         );
+
+
+echo $obj -> getLatitud()."\n";
+echo $obj -> getLongitud()."\n";
+
         
     }
 

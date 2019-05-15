@@ -34,12 +34,12 @@ class areaDeclientes{
 			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud());
 		
 			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLatitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLatitud()));
-			return floatval('$coordenadaEntera'.'.'.'$coordenadaDecimal');  
+			return floatval($coordenadaEntera.'.'.$coordenadaDecimal);  
 
 		}else {
 
 			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud());
-			return floatval('$coordenadaEntera');  
+			return floatval($coordenadaEntera);  
 
 		}
 		
@@ -63,12 +63,12 @@ class areaDeclientes{
 			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLongitud(),$this->coordenadaDeFin->getLongitud());
 		
 			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLongitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLongitud()));
-			return floatval('$coordenadaEntera'.'.'.'$coordenadaDecimal');  
+			return floatval($coordenadaEntera.'.'.$coordenadaDecimal);  
 
 		}else {
 
 			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLongitud(),$this->coordenadaDeFin->getLongitud());
-			return floatval('$coordenadaEntera');  
+			return floatval($coordenadaEntera);  
 
 		}	
 	  
