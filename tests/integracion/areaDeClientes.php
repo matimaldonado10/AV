@@ -1,11 +1,12 @@
 <?php
-include_once ('coordenadasGeograficas.php');
+include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeograficas.php');
 class areaDeclientes{
 	private $coordenadaDeInicio;
 	private $coordenadaDeFin;
 
 
     public function __construct(){
+		//coordenadas dentro de saenz peña
         $this->coordenadaDeInicio = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.8000,-60.4548);
         $this->coordenadaDeFin = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.7680,-60.4148);
     }

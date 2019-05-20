@@ -1,5 +1,5 @@
 <?php
-include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/areaDeClientes.php');
+include_once ('/home/mati/git-repositorios/av/tests/integracion/areaDeClientes.php');
 include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeograficas.php');
 
 $area = new areaDeClientes();

@@ -1,19 +1,27 @@
 <?php
 /**
  * REALIZA LAS TAREAS DE COMUNICACIÓN CON EL SERVIDOR OSRM 
- *  OBTIENE UNA MATRIZ DE DISTANCIA 
+ * OBTIENE UNA MATRIZ DE DISTANCIA 
+ * 
+ * SE PUEDE UTILIZAR CON EL mainOsrm.php O REALIZAR OTRO DISTINTO
+ * QUE TRABAJE CON ESTA CLASE
+ * 
  *  
  */
 
 include_once ('coordenadasGeograficas.php');
-
+include_once ('/home/mati/git-repositorios/av/customException.php');
 class recursosOsrm {
     private $cantidadDeClientes;
-    private $deposito; //permite sólo 1 depósito
+    private $deposito; //permite sólo 1 depósito (a menos que sea un array de coordenadas geograficas)
     private $coordenadasDeClientes;
    
     
-    
+    /**
+     * TODO
+     * QUITAR DE ACÁ
+     * PERTENECE A LAS PRUEBAS
+     */
     private function crearCoordenadas(){
         $coordenadasGeograficas = new coordenadasGeograficas();
         //coordenadas del depósito aqua vital
@@ -85,9 +93,11 @@ class recursosOsrm {
             
             return $matriz;
         }else {
-            return false;
+            throw new customException('no existe matriz');
+            
         }
-
+ 
+        
     }
     
     
@@ -108,6 +118,10 @@ class recursosOsrm {
      */ 
     public function setCantidadDeClientes($cantidadDeClientes)
     {
+        if (!is_int($cantidadDeClientes)) {
+            throw new customException('CANTIDAD DE CLIENTES DEBE SER ENTERA');
+        }
+
         $this->cantidadDeClientes = $cantidadDeClientes;
 
         return $this;
