@@ -1,6 +1,6 @@
 <?php
 include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/mainOsrm.php');
-include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/recursosOsrmPrueba.php');
+include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/recursosOsrm.php');
 
 use PHPUnit\Framework\TestCase;
 

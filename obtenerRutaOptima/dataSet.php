@@ -13,8 +13,108 @@ class dataSet {
     private $formatoDePeso;
     private $comentario;
     private $cantidadDeVehiculos;
-   
-    
+
+    public function _construct(){
+
+    }
+
+    public static function construirInstanciaConParametros(
+        $nombre, $tipoDeProblema, $tipoDePeso,
+        $nodosClientes, $depositos, $demandaDeClientes,
+        $unidadDeMedida, $matrizDeClientes, $dimension,
+        $capacidad, $formatoDePeso, $comentario, $cantidadDeVehiculos){
+        
+        $instancia = new self();
+
+        $instancia->setNombre($nombre);
+        $instancia->setTipoDeProblema($tipoDeProblema);
+        $instancia->setTipoDePeso($tipoDePeso);
+        $instancia->setNodosClientes($nodosClientes);
+        $instancia->setDepositos($depositos);
+        $instancia->setDemandaDeClientes($demandaDeClientes);
+        $instancia->setUnidadDeMedida($unidadDeMedida);
+        $instancia->setMatrizDeClientes($matrizDeClientes);
+        $instancia->setDimension($dimension);
+        $instancia->setCapacidad($capacidad);
+        $instancia->setFormatoDePeso($formatoDePeso);
+        $instancia->setComentario($comentario);
+        $instancia->setCantidadDeVehiculos($cantidadDeVehiculos);
+
+
+		
+
+		
+		return $instancia;
+	}
+
+    public function crearArchivoDataSet(){
+        /**PORHACER
+         * 
+         * nombrar al archivo con
+         * n=cantidad de nodos
+         * k = cantidad de vehículos
+         */
+
+
+        
+        $fp = fopen("/home/mati/git-repositorios/av/obtenerRutaOptima/".$this->getNombre()."-n".$this->getDimension()."-k".$this->getCantidadDeVehiculos().".vrp","w");
+        fwrite($fp, 'NAME: '.$this->getNombre().PHP_EOL );
+        fwrite($fp, 'COMMENT: '.$this->getComentario().PHP_EOL  );
+        fwrite($fp, 'TYPE: '.$this->getTipoDeProblema().PHP_EOL  );
+        fwrite($fp, 'DIMENSION: '.$this->getDimension().PHP_EOL  );
+        fwrite($fp, 'EDGE_WEIGHT_TYPE: '.$this->getTipoDePeso().PHP_EOL  );
+        fwrite($fp, 'EDGE_WEIGHT_FORMAT: '.$this->getFormatoDePeso().PHP_EOL  );
+        fwrite($fp, 'EDGE_WEIGHT_UNIT_OF_MEASUREMENT: '.$this->getUnidadDeMedida().PHP_EOL  );
+        fwrite($fp, 'CAPACITY: '.$this->getCapacidad().PHP_EOL  );
+        fwrite($fp, 'NODE_COORD_SECTION'.PHP_EOL  );
+
+        for ($i=0; $i <count($this->getNodosClientes()) ; $i++) { 
+            fwrite($fp, $i.' '.$this->getNodosClientes()[$i][0]->getLatitud().' '.$this->getNodosClientes()[$i][0]->getLongitud().' '.$this->getNodosClientes()[$i][1].PHP_EOL  );
+
+        }
+
+        fwrite($fp, 'EDGE_WEIGHT_SECTION'.PHP_EOL  );
+
+        $matriz = $this->getMatrizDeClientes();
+       
+
+        for ($i=0; $i <count($matriz) ; $i++) { 
+           $fila = $matriz[$i];
+            
+           for ($columna=0; $columna < count($fila); $columna++) { 
+            fwrite($fp, $fila[$columna].' ');
+           }
+           fwrite($fp, PHP_EOL  );
+
+
+       }
+
+       fwrite($fp, 'DEMAND_SECTION'.PHP_EOL  );
+
+       for ($i=0; $i <count($this->getNodosClientes()) ; $i++) { 
+        fwrite($fp, $i." ".$this->getDemandaDeClientes().PHP_EOL  );
+       }
+
+       fwrite($fp, 'DEPOT_SECTION'.PHP_EOL  );
+
+       for ($i=0; $i < $this->getDepositos() ; $i++) {
+
+        fwrite($fp, $i.PHP_EOL  );
+
+       }
+
+       fwrite($fp, '-1'.PHP_EOL  );
+
+       fwrite($fp, 'EOF'  );
+
+
+
+
+       
+
+        fclose($fp);   
+
+    }
     
 
     
@@ -199,7 +299,7 @@ class dataSet {
      *
      * @return  self
      */ 
-    public function setMatrizDeClientes(array $matrizDeClientes)
+    public function setMatrizDeClientes( $matrizDeClientes)
     {
         $this->matrizDeClientes = $matrizDeClientes;
 
@@ -246,15 +346,7 @@ class dataSet {
         return $this;
     }
 
-    public function crearArchivoDataSet(){
-        /**PORHACER
-         * 
-         * nombrar al archivo con
-         * n=cantidad de clientes
-         * k = cantidad de vehículos
-         */
-
-    }
+ 
 
     /**
      * Get the value of cantidadDeVehiculos
@@ -277,4 +369,24 @@ class dataSet {
     }
 
     
+
+    /**
+     * Get the value of capacidad
+     */ 
+    public function getCapacidad()
+    {
+        return $this->capacidad;
+    }
+
+    /**
+     * Set the value of capacidad
+     *
+     * @return  self
+     */ 
+    public function setCapacidad($capacidad)
+    {
+        $this->capacidad = $capacidad;
+
+        return $this;
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/mainOsrm.php');
-include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/recursosOsrmPrueba.php');
+include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/recursosOsrm.php');
+include_once ('/home/mati/git-repositorios/av/tests/integracion/areaDeClientes.php');
+include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeograficas.php');
 
 use PHPUnit\Framework\TestCase;
 
@@ -11,16 +13,32 @@ final class solicitarMatrizAlServidorOsrm extends TestCase
      */
     public  function crearUnaSolicitudValida()
     {
+        echo "\n";
+
         $main = new mainOsrm();
         $recurso = new recursosOsrm();
-
-        $this->assertInstanceOF(mainOsrm::Class,$main->setRecursoOsrm($recurso));
-
-        echo "\n";
-       $main -> getRecursoOsrm() -> setCantidadDeClientes(5);
+        $area = new areaDeClientes();
 
 
-        $main->solicitarMatrizAlServidorOsrm();
+        for ($indice=0; $indice < 5 ; $indice++) { 
+            $coordenadaVacia = new coordenadasGeograficas();
+            $arrayClientes[] = $area->crearCoordenadaAleatoria($coordenadaVacia);
+        }
+
+        $main->setRecursoOsrm($recurso);
+        $main->setArrayClientes($arrayClientes);
+        $main->solicitarMatrizAlServidorOsrmConDepositoPorDefecto();
+
+        $this->assertIsArray(
+            $main->getMatrizOsrm()
+        );
+
+        $this->assertCount(
+            6,
+            $main->getMatrizOsrm()
+        );
+
+        var_dump($main->getMatrizOsrm());
         
 
     }
@@ -33,84 +51,59 @@ final class solicitarMatrizAlServidorOsrm extends TestCase
         $main = new mainOsrm();
         $recurso = new recursosOsrm();
 
-        $this->expectException(TypeError::class);
+        $this->expectException(Error::class);
 
-        $main->setRecursoOsrm(1456);
-
-        $main->solicitarMatrizAlServidorOsrm();
+        $main->setArrayClientes(array('a','b','c'));
+        $main->solicitarMatrizAlServidorOsrmConDepositoPorDefecto();
 
 
     }
 
-      /**
+    
+
+   
+
+     /**
      * @test
      */
-    public  function crearUnaSolicitudInvalidaConCantidadDeClientesDecimales()
-    {
+    public  function crearMatrizConUnCliente(){
+        
+        echo "\n";
+
         $main = new mainOsrm();
         $recurso = new recursosOsrm();
+        $area = new areaDeClientes();
 
-        $this->expectOutputString('CANTIDAD DE CLIENTES DEBE SER ENTERA');
 
-        $main->setRecursoOsrm($recurso);
-
-        try {
-            $main -> getRecursoOsrm() -> setCantidadDeClientes(2.5);
-            $main->solicitarMatrizAlServidorOsrm();
-        } catch (Exception $mensaje) {
-            echo $mensaje->getMessage();
+        for ($indice=0; $indice < 1 ; $indice++) { 
+            $coordenadaVacia = new coordenadasGeograficas();
+            $arrayClientes[] = $area->crearCoordenadaAleatoria($coordenadaVacia);
         }
 
-
-        
-
-
-    }
-
-     /**
-     * @test
-     */
-    public  function cambiarLaCantidadDeClientes()
-    {
-        $main = new mainOsrm();
-        $recurso = new recursosOsrm();
-
-        
         $main->setRecursoOsrm($recurso);
 
-        $main -> getRecursoOsrm() -> setCantidadDeClientes(20);
+        $main->setArrayClientes($arrayClientes);
+        $main->solicitarMatrizAlServidorOsrmConDepositoPorDefecto();
 
-        $main->solicitarMatrizAlServidorOsrm();
+        $this->assertIsArray(
+            $main->getMatrizOsrm()
+        );
 
-        $this->assertCount(21, $main -> getRecursoOsrm() -> getCoordenadasDeClientes());
-    
+        $this->assertCount(
+            2,
+            $main->getMatrizOsrm()
+        );
+
+        var_dump($main->getMatrizOsrm());
+        
+
         
 
     }
 
-     /**
-     * @test
-     */
-    public  function crearMatrizConUnCliente()
-    {
-        $main = new mainOsrm();
-        $recurso = new recursosOsrm();
-
-        
-        $main->setRecursoOsrm($recurso);
-
-        $main -> getRecursoOsrm() -> setCantidadDeClientes(1);
-
-        $main->solicitarMatrizAlServidorOsrm();
-
-        $this->assertCount(2, $main -> getRecursoOsrm() -> getCoordenadasDeClientes());
-    
-        
-
-    }
 
     /**
-     * @test
+     * 
      * 
      * 
      */

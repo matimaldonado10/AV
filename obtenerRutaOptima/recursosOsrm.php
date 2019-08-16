@@ -1,42 +1,55 @@
 <?php
 /**
  * REALIZA LAS TAREAS DE COMUNICACIÓN CON EL SERVIDOR OSRM 
- *  OBTIENE UNA MATRIZ DE DISTANCIA 
+ * OBTIENE UNA MATRIZ DE DISTANCIA 
+ * 
+ * SE PUEDE UTILIZAR CON EL mainOsrm.php O REALIZAR OTRO DISTINTO
+ * QUE TRABAJE CON ESTA CLASE
+ * 
  *  
  */
 
 include_once ('coordenadasGeograficas.php');
-
+include_once ('/home/mati/git-repositorios/av/customException.php');
 class recursosOsrm {
-    
-    private function crearCoordenadas(){
-        $random = new coordenadasGeograficas();
-        //coordenadas de aqua vital
-        $coordenadas = '-60.44692,-26.78427;';
-    
-        for ($i=0; $i < 19; $i++) { 
-            $lat = $random->latitud();
-            $latDeciaml = $random->latitudDecimal();
-    
-    
-            $long = $random->longitud();
-            $longDecimal = $random->longitudDecimal();
-    
-            if (empty($coordenadas)) {
-                $coordenadas = "$long" .'.'."$longDecimal" .',' ."$lat".'.'."$latDeciaml".';';
+    private $deposito; //por defecto se carga con las coordenadas de av
+    private $coordenadasDeClientes;
+    private $nombreDeposito;
+   
+    public function __construct(){
+        $this->setDeposito(array(coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.78427,-60.44692)));
+        $this->setNombreDeposito(array('Envasadora'));
+    }
+
+    /**
+     * OSRM necesita pares de coordenadas de la forma (Longitud,Latitud) al revés de otros servicios
+     */
+    public function traducirCoordenadasParaOsrm(){
+
+        for ($indice=0; $indice < count($this->getDeposito()) ; $indice++) {
+            if ($indice == 0) {
+                $coordenadasParaOsrm = $this->getDeposito()[$indice] -> getLongitud().','.$this->getDeposito()[$indice]->getLatitud().';';
+            }else {
+                $coordenadasParaOsrm .= $this->getDeposito()[$indice] -> getLongitud().','.$this->getDeposito()[$indice]->getLatitud().';';
             }
-            else {
-                $coordenadas .= "$long" .'.'."$longDecimal" .',' ."$lat".'.'."$latDeciaml".';';
-            }
+            
         }
-        $coordenadas = trim($coordenadas, ';');
-        return $coordenadas;
+
+
+        for ($indice=0; $indice < count($this->getCoordenadasDeClientes()) ; $indice++) {
+            
+            
+            $coordenadasParaOsrm .= $this->getCoordenadasDeClientes()[$indice] -> getLongitud().','.$this->getCoordenadasDeClientes()[$indice]->getLatitud().';';
+        }
+
+        $coordenadasParaOsrm = trim($coordenadasParaOsrm, ';');
+        return $coordenadasParaOsrm;
 
     }
 
     private function crearSolicitudYEnviar(){
         $ch = curl_init();
-        $coordenadas = $this->crearCoordenadas();
+        $coordenadas = $this->traducirCoordenadasParaOsrm();
 
         $url = 'http://127.0.0.1:5000/table/v1/driving/';
         $url .= $coordenadas;
@@ -77,14 +90,92 @@ class recursosOsrm {
             foreach  ( $respuestaDelServidor->distances as $key ) {
                     $matriz[]= $key; 
             }
+            
+            
             return $matriz;
-           
         }else {
-            return false;
+            throw new customException('no existe matriz');
+            
         }
-
+ 
+        
     }
     
     
   
+    /**
+     * Get the value of deposito
+     */ 
+    public function getDeposito()
+    {
+        return $this->deposito;
+    }
+
+    /**
+     * Set the value of deposito
+     *
+     * @return  self
+     */ 
+    public function setDeposito(array $deposito)
+    {
+        foreach ($deposito as $indice) {
+            if (!$indice instanceof coordenadasGeograficas ) {
+                throw new customException("El array deposito debe contener objetos de tipo coordenadasGeograficas");
+                
+            }
+        }
+        
+        $this->deposito = $deposito;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of coordenadasDeClientes
+     */ 
+    public function getCoordenadasDeClientes()
+    {
+        return $this->coordenadasDeClientes;
+    }
+
+    /**
+     * Set the value of coordenadasDeClientes
+     *
+     * @return  self
+     */ 
+    public function setCoordenadasDeClientes(array $coordenadasDeClientes)
+    {
+        foreach ($coordenadasDeClientes as $indice) {
+            if (!$indice instanceof coordenadasGeograficas ) {
+                throw new customException("El array coordenadasDeClientes debe contener objetos de tipo coordenadasGeograficas");
+                
+            }
+        }
+        
+        $this->coordenadasDeClientes = $coordenadasDeClientes;
+
+        return $this;
+    }
+
+    
+
+    /**
+     * Get the value of nombreDeposito
+     */ 
+    public function getNombreDeposito()
+    {
+        return $this->nombreDeposito;
+    }
+
+    /**
+     * Set the value of nombreDeposito
+     *
+     * @return  self
+     */ 
+    public function setNombreDeposito($nombreDeposito)
+    {
+        $this->nombreDeposito = $nombreDeposito;
+
+        return $this;
+    }
 }

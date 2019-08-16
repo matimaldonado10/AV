@@ -1,20 +1,4 @@
 <?php
-/**
- * Script principal para obtener las rutas de reparto optimizadas
- * 
- * FUNCIONES PRINCIPALES
- * Envía un conjunto de coordenadas geográficas que representan las ubicaciones de los clientes
- * al servidor OSRM.
- * 
- * Obtiene de OSRM una matriz de distancia de todos los clientes.
- * 
- * Envia al servlet de OPTAPLANNER el DATASET necesario para que pueda trabajar. 
- * 
- * Solicita al servelt encontrar una solucíon óptima al problema del enrutamiento de
- * vehículos.
- * 
- * 
- */
 
 include_once ('recursosOptaplanner.php');
 $recursos = new recursosOptaplanner();

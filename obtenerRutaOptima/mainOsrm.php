@@ -4,30 +4,33 @@
  * LOS CLIENTES NO SON REALES
  * TODOS LAS COORDENADAS SON CREADAS DE FORMA ALEATORIA
  */
-include_once ("recursosOsrmPrueba.php");
+include_once ("recursosOsrm.php");
 
 class mainOsrm {
 
     private $recursoOsrm;
 
     private $matrizOsrm;
+
+    private $arrayClientes;
     
     public function __construct(){
 
     }
 
 
-    public function  solicitarMatrizAlServidorOsrm(){
+    public function  solicitarMatrizAlServidorOsrmConDepositoPorDefecto(){
         
        
         try {
+
+            $this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
+
             $matriz = $this->recursoOsrm-> obtenerMatrizDeDistancia();
 
             $this->setMatrizOsrm($matriz);
     
-            $this->imprimirMatriz($matriz);
-    
-            $this->imprimirCoordenadas();
+            
             
         } catch (Exception $mensajeDeExcepcion) {
             echo 'Mensaje: '. $mensajeDeExcepcion->getMessage();
@@ -36,30 +39,9 @@ class mainOsrm {
 
     }
 
-    public function imprimirMatriz($matriz){
-        if (is_array($matriz)) {
-            foreach ($matriz as $key ) {
-            foreach ($key as $key2) {
-                echo "$key2 ";
+    
 
-            } 
-            echo "\n";
-            };
-
-            echo "\n";
-            
-
-        }else {
-            throw new Exception('no existe matriz');
-        }   
-    }
-
-    public function imprimirCoordenadas(){
-        foreach ($this->recursoOsrm->getCoordenadasDeClientes() as $indice) {
-            echo $indice."\n" ;
-        }
-    }
-
+    
     
 
 
@@ -99,6 +81,26 @@ class mainOsrm {
     public function setMatrizOsrm(array $matrizOsrm)
     {
         $this->matrizOsrm = $matrizOsrm;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of arrayClientes
+     */ 
+    public function getArrayClientes()
+    {
+        return $this->arrayClientes;
+    }
+
+    /**
+     * Set the value of arrayClientes
+     *
+     * @return  self
+     */ 
+    public function setArrayClientes(array $arrayClientes)
+    {
+        $this->arrayClientes = $arrayClientes;
 
         return $this;
     }

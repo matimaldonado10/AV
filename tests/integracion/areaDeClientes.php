@@ -7,8 +7,8 @@ class areaDeclientes{
 
     public function __construct(){
 		//coordenadas dentro de saenz peña
-        $this->coordenadaDeInicio = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.8000,-60.4548);
-        $this->coordenadaDeFin = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.7680,-60.4148);
+        $this->coordenadaDeInicio = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.8001,-60.4548);
+        $this->coordenadaDeFin = coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.7681,-60.4148);
     }
         
 
@@ -20,6 +20,9 @@ class areaDeclientes{
 			return $ubicacionDeCliente;
 			
 		}else{
+
+			//TODO
+			//lanzar customException
 			return false;
 		}
 	}
@@ -34,7 +37,7 @@ class areaDeclientes{
 		if ($this->esCoordenadaContieneDecimal($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud())) {
 			$coordenadaEntera = $this->obtenerCoordenadaValorAleatorio($this->coordenadaDeInicio->getLatitud(),$this->coordenadaDeFin->getLatitud());
 		
-			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLatitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLatitud()));
+			$coordenadaDecimal = $this->obtenerCoordenadaValorAleatorio($this->extraerCoordenadaDecimal($this->coordenadaDeFin->getLatitud()), $this->extraerCoordenadaDecimal($this->coordenadaDeInicio->getLatitud()));
 			return floatval($coordenadaEntera.'.'.$coordenadaDecimal);  
 
 		}else {

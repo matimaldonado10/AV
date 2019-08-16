@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-include_once ("/home/mati/git-repositorios/av/obtenerRutaOptima/areaDeClientes.php");
+include_once ("/home/mati/git-repositorios/av/tests/integracion/areaDeClientes.php");
 include_once ("/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeograficas.php");
 
 use PHPUnit\Framework\TestCase;
