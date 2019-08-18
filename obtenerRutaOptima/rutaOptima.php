@@ -41,24 +41,10 @@ class rutaOptima {
     /**
      *  UTILIZO EL SERVICIO DE OSRM
      */
-    public function iniciarBusquedaDeRutasOptimas(){
+    public function iniciarBusquedaDeClientes(){
 
         $this->setArrayDeClientesDeRepartidoresEnUnDia($this->obtenerListaDeClientesDeTodosLosRepartidoresEnUnDia());
 
-        $this->enviarClientesAlServidorOsrm();
-
-
-
-
-/**  
- * for ($i=0; $i <count($this->arrayDatosOsrm) ; $i++) { 
-  *  print_r($this->arrayDatosOsrm[$i]->getMatrizOsrm());
-  *  echo"\n";
-   *     } 
-        */
-       
-
-        return true;
     }
 
     public function obtenerListaDeClientesDeTodosLosRepartidoresEnUnDia(){
@@ -197,6 +183,44 @@ class rutaOptima {
 
 
     /**
+     * SE SELECCIONAN CIERTOS DATOS DE LA SALIDA DE OSRM. 
+     * SE CONVIERTEN ESOS DATOS EN UNA ARCHIVO DATASET.
+     * ESTE ARCHIVO DATASET ES NECESARIO PARA QUE OPTAPLANNER PUEDA FUNCIONAR.
+     * 
+     */
+
+
+    public function transformarDatosParaOptaplanner(){
+
+        $matriz = $this->getArrayDatosOsrm()[0]->getMatrizOsrm();
+
+        $nodosclientes = $this->obtenerNodosClientesDelRepartidorParaOptaplanner(0);
+        
+        $dataSet = dataSet::construirInstanciaConParametros(
+            'prueba',
+            'CVRP',
+            'EXPLICIT',
+            $nodosclientes,
+            $this->getCantidadDepositos(),
+            '1',
+            'km',
+            $matriz,
+            count($nodosclientes),
+            '100',
+            'FULL_MATRIX',
+            'ESTO ES UNA PRUEBA PARA CREAR UN DATASET by Matias Maldonado',
+            '1'
+        
+        
+        
+        );
+        
+        
+        $dataSet->crearArchivoDataSet();
+    } 
+
+
+    /**
      * UTILIZO EL SERVICIO DE OPTAPLANNER
      * 
      */
@@ -288,29 +312,10 @@ class rutaOptima {
 
 $rutaOptima = new rutaOptima();
 
-$rutaOptima->iniciarBusquedaDeRutasOptimas();
-$matriz = $rutaOptima->getArrayDatosOsrm()[0]->getMatrizOsrm();
-
-$nodosclientes = $rutaOptima->obtenerNodosClientesDelRepartidorParaOptaplanner(0);
-
-$dataSet = dataSet::construirInstanciaConParametros(
-    'prueba',
-    'CVRP',
-    'EXPLICIT',
-    $nodosclientes,
-    $rutaOptima->getCantidadDepositos(),
-    '1',
-    'km',
-    $matriz,
-    count($nodosclientes),
-    '100',
-    'FULL_MATRIX',
-    'ESTO ES UNA PRUEBA PARA CREAR UN DATASET by Matias Maldonado',
-    '1'
+$rutaOptima->iniciarBusquedaDeClientes();
+$rutaOptima->enviarClientesAlServidorOsrm();
+$rutaOptima->transformarDatosParaOptaplanner();
 
 
 
-);
 
-
-$dataSet->crearArchivoDataSet();

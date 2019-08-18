@@ -82,7 +82,8 @@ class dataSet {
            $fila = $matriz[$i];
             
            for ($columna=0; $columna < count($fila); $columna++) { 
-            fwrite($fp, $fila[$columna].' ');
+            $resultado = $fila[$columna] / 1000;
+            fwrite($fp, $resultado.' ');
            }
            fwrite($fp, PHP_EOL  );
 
