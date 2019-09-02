@@ -14,7 +14,7 @@ class Database{
 	private $db_host = NULL;  // Change as required
 	private $db_user = "root";  // Change as required
 	private $db_pass = "Aquavital241315";  // Change as required
-	private $db_name = "aquavital";	// Change as required
+	private $db_name = "aquavital_desarrollo";	// Change as required
 	
 	/*
 	 * Extra variables that are required by other function such as boolean con variable

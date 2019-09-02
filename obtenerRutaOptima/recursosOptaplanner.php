@@ -8,6 +8,9 @@ class recursosOptaplanner {
      * cantidad de repartidores y una matriz de distancia entre todos los clientes.
      */
 
+    private $directorioDelDataSet;
+    private $nombreDataSet;
+
     public function enviarArchivoDataSet($cookie){
 
         $solicitudAlServlet = $this -> crearSolicitudParaOptaplanner($cookie,"upload","POST",true);
@@ -81,7 +84,9 @@ class recursosOptaplanner {
 
     public function obtenerArchivoDataSet(){
         //$cfile = curl_file_create('/home/mati/Escritorio/ruta03-PorTiempo-n10-k3.vrp','text/plain','ruta03-PorTiempo-n10-k3.vrp');
-        $cfile = curl_file_create('/home/mati/Escritorio/sp-n11-k3.vrp','text/plain','sp-n11-k3.vrp');
+        //$cfile = curl_file_create('/home/mati/Escritorio/sp-n11-k3.vrp','text/plain','sp-n11-k3.vrp');
+        $cfile = curl_file_create($this->getDirectorioDelDataSet().$this->getNombreDataSet(),'text/plain',$this->getNombreDataSet());
+
 
         return $archivoDataSet = array('fileName1' => $cfile);
     }
@@ -118,5 +123,45 @@ class recursosOptaplanner {
            
 
         return $solicitudAlServlet;
+    }
+
+    /**
+     * Get the value of directorioDelDataSet
+     */ 
+    public function getDirectorioDelDataSet()
+    {
+        return $this->directorioDelDataSet;
+    }
+
+    /**
+     * Set the value of directorioDelDataSet
+     *
+     * @return  self
+     */ 
+    public function setDirectorioDelDataSet($directorioDelDataSet)
+    {
+        $this->directorioDelDataSet = $directorioDelDataSet;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombreDataSet
+     */ 
+    public function getNombreDataSet()
+    {
+        return $this->nombreDataSet;
+    }
+
+    /**
+     * Set the value of nombreDataSet
+     *
+     * @return  self
+     */ 
+    public function setNombreDataSet($nombreDataSet)
+    {
+        $this->nombreDataSet = $nombreDataSet;
+
+        return $this;
     }
 }

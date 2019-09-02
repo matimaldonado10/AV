@@ -28,15 +28,21 @@ include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/recursosOptaplan
 
 include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/coordenadasGeograficas.php');
 include_once ('/home/mati/git-repositorios/av/obtenerRutaOptima/dataSet.php');
+include_once ('jsonRutaOptimizada.php');
+
 
 class rutaOptima {
     private $arrayDatosOsrm;
     private $arrayRepartidores;
     private $arrayDeClientesDeRepartidoresEnUnDia;
     private $cantidadDepositos;
+    private $directorioDelDataSetAGenerar;
+    private $nombreDataSet;
     
 
-    public function __construct(){}    
+    public function __construct(){
+        $this->setDirectorioDelDataSetAGenerar("/home/mati/git-repositorios/av/obtenerRutaOptima/");
+    }    
     
     /**
      *  UTILIZO EL SERVICIO DE OSRM
@@ -209,14 +215,15 @@ class rutaOptima {
             '100',
             'FULL_MATRIX',
             'ESTO ES UNA PRUEBA PARA CREAR UN DATASET by Matias Maldonado',
-            '1'
-        
+            '1',
+            $this->getDirectorioDelDataSetAGenerar()
         
         
         );
         
         
-        $dataSet->crearArchivoDataSet();
+        $resultado = $dataSet->crearArchivoDataSet();
+        $this->setNombreDataSet($resultado);
     } 
 
 
@@ -224,6 +231,53 @@ class rutaOptima {
      * UTILIZO EL SERVICIO DE OPTAPLANNER
      * 
      */
+
+
+    public function enviarDataSetAOptaplannerParaOptimizacionDeRutas(){
+
+        $optaPlanner = new mainOptaplanner();
+
+        $optaPlanner->getRecursos()->setDirectorioDelDataSet($this->getDirectorioDelDataSetAGenerar());
+        $optaPlanner->getRecursos()->setNombreDataSet($this->getNombreDataSet());
+
+        $resultado = $optaPlanner->iniciarSolicitudAlServidorOptaplanner();
+        $this->extraerDatosDelResultadoDeOptaplanner($resultado);
+
+        
+        
+        
+    } 
+
+    public function extraerDatosDelResultadoDeOptaplanner($resultadoDeOptaplanner){
+        
+        $optaPlanner = new mainOptaplanner();
+
+        
+
+        if ($optaPlanner->esRespuestaValida($resultadoDeOptaplanner)) {
+
+            $resultadoDeOptaplanner = json_decode($resultadoDeOptaplanner);
+            if ($resultadoDeOptaplanner->feasible == "true") {
+
+                $rutaDeClientesOptimizada = array();
+            
+                $rutaDeClientesOptimizada = $resultadoDeOptaplanner->vehicleRouteList[0]->customerList;
+
+                
+
+            }else {
+                //HACER crear archivo de error
+            }
+        }else {
+            //HACER crear archivo de error
+        }
+
+
+        
+            
+            
+      
+    }
 
 /**
  * GETTERS AND SETTERS
@@ -308,6 +362,46 @@ class rutaOptima {
 
         return $this;
     }
+
+    /**
+     * Get the value of directorioDelDataSetAGenerar
+     */ 
+    public function getDirectorioDelDataSetAGenerar()
+    {
+        return $this->directorioDelDataSetAGenerar;
+    }
+
+    /**
+     * Set the value of directorioDelDataSetAGenerar
+     *
+     * @return  self
+     */ 
+    public function setDirectorioDelDataSetAGenerar($directorioDelDataSetAGenerar)
+    {
+        $this->directorioDelDataSetAGenerar = $directorioDelDataSetAGenerar;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nombreDataSet
+     */ 
+    public function getNombreDataSet()
+    {
+        return $this->nombreDataSet;
+    }
+
+    /**
+     * Set the value of nombreDataSet
+     *
+     * @return  self
+     */ 
+    public function setNombreDataSet($nombreDataSet)
+    {
+        $this->nombreDataSet = $nombreDataSet;
+
+        return $this;
+    }
 }
 
 $rutaOptima = new rutaOptima();
@@ -315,6 +409,7 @@ $rutaOptima = new rutaOptima();
 $rutaOptima->iniciarBusquedaDeClientes();
 $rutaOptima->enviarClientesAlServidorOsrm();
 $rutaOptima->transformarDatosParaOptaplanner();
+$rutaOptima->enviarDataSetAOptaplannerParaOptimizacionDeRutas();
 
 
 

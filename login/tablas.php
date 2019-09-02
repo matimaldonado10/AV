@@ -1,5 +1,6 @@
 <?php
-include_once ('mysql_crud.php');
+include_once ('/home/mati/git-repositorios/av/nogit/mysql_crud.php');
+include_once ('/home/mati/git-repositorios/av/modelo/constantesDB.php');
 class tablas
 {
 
@@ -45,7 +46,7 @@ class tablas
 	{
 		$db = new Database();
 		$db->connect();
-		$db->select('articulo','IdArticulo, Articulo, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->select('articulo','IdArticulo, Nombre, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Regristros = $db->getResult();
 		$db->disconnect();
 		return $Regristros;
@@ -65,14 +66,13 @@ class tablas
 
 	}
 
-
 	public function obtenerClientesDeRepartidor($dni)
 	{
 		$db = new Database();
 		$db->connect();
-		$where = 'zonadereparto.idRutaDeReparto =  clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto AND  clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio AND  persona.DNI  IN (SELECT DISTINCT persona.DNI FROM zonadereparto JOIN clientesdirectos__zonadereparto JOIN persona JOIN direccion JOIN barrio ON zonadereparto.idRutaDeReparto =  clientesdirectos__zonadereparto.ZonaDeReparto_idRutaDeReparto AND clientesdirectos__zonadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__zonadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio WHERE zonadereparto.Repartidor_Persona_DNIRepartidor = "'.$dni.'") ';
+		$where = constantesDB::$diaDeReparto_id.' = '.constantesDB::$clientesDirectosDiaDeReparto_idRutaDeReparto.' AND  '.constantesDB::$clientesDirectosDiaDeReparto_dniCliente.' = '.constantesDB::$persona_dni.'  AND '.constantesDB::$persona_id.' = '.constantesDB::$clientesDirectosDiaDeReparto_idCliente.' AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio AND  persona.DNI  IN (SELECT DISTINCT persona.DNI FROM diadereparto JOIN clientesdirectos__diadereparto JOIN persona JOIN direccion JOIN barrio ON diadereparto.idRutaDeReparto =  clientesdirectos__diadereparto.ZonaDeReparto_idRutaDeReparto AND clientesdirectos__diadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__diadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio WHERE diadereparto.Repartidor_Persona_DNIRepartidor = "'.$dni.'") ';
 
-		$db->select('persona','DISTINCT persona.IdPersona, persona.DNI, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Barrio, zonadereparto.Dia','direccion JOIN barrio JOIN clientesdirectos__zonadereparto JOIN zonadereparto',$where);
+		$db->select('persona','DISTINCT persona.IdPersona, persona.DNI, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Nombre, diadereparto.Dia','direccion JOIN barrio JOIN clientesdirectos__diadereparto JOIN diadereparto',$where);
 				// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Registros = $db->getResult();
 		$db->disconnect();

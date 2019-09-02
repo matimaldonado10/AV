@@ -13,6 +13,7 @@ class dataSet {
     private $formatoDePeso;
     private $comentario;
     private $cantidadDeVehiculos;
+    private $directorioDataSet;
 
     public function _construct(){
 
@@ -22,7 +23,8 @@ class dataSet {
         $nombre, $tipoDeProblema, $tipoDePeso,
         $nodosClientes, $depositos, $demandaDeClientes,
         $unidadDeMedida, $matrizDeClientes, $dimension,
-        $capacidad, $formatoDePeso, $comentario, $cantidadDeVehiculos){
+        $capacidad, $formatoDePeso, $comentario,
+        $cantidadDeVehiculos, $directorioDataSet){
         
         $instancia = new self();
 
@@ -39,6 +41,7 @@ class dataSet {
         $instancia->setFormatoDePeso($formatoDePeso);
         $instancia->setComentario($comentario);
         $instancia->setCantidadDeVehiculos($cantidadDeVehiculos);
+        $instancia->setDirectorioDataSet($directorioDataSet);
 
 
 		
@@ -55,9 +58,9 @@ class dataSet {
          * k = cantidad de vehículos
          */
 
-
+        $nombreArchivoDataSet = $this->getNombre()."-n".$this->getDimension()."-k".$this->getCantidadDeVehiculos().".vrp";
         
-        $fp = fopen("/home/mati/git-repositorios/av/obtenerRutaOptima/".$this->getNombre()."-n".$this->getDimension()."-k".$this->getCantidadDeVehiculos().".vrp","w");
+        $fp = fopen($this->getDirectorioDataSet().$nombreArchivoDataSet,"w");
         fwrite($fp, 'NAME: '.$this->getNombre().PHP_EOL );
         fwrite($fp, 'COMMENT: '.$this->getComentario().PHP_EOL  );
         fwrite($fp, 'TYPE: '.$this->getTipoDeProblema().PHP_EOL  );
@@ -93,7 +96,14 @@ class dataSet {
        fwrite($fp, 'DEMAND_SECTION'.PHP_EOL  );
 
        for ($i=0; $i <count($this->getNodosClientes()) ; $i++) { 
-        fwrite($fp, $i." ".$this->getDemandaDeClientes().PHP_EOL  );
+
+        if ($i < $this->getDepositos()) {
+            fwrite($fp, $i." ".'0'.PHP_EOL  );
+
+        }else {
+            fwrite($fp, $i." ".$this->getDemandaDeClientes().PHP_EOL  );
+        }
+        
        }
 
        fwrite($fp, 'DEPOT_SECTION'.PHP_EOL  );
@@ -106,14 +116,16 @@ class dataSet {
 
        fwrite($fp, '-1'.PHP_EOL  );
 
-       fwrite($fp, 'EOF'  );
+       fwrite($fp, 'EOF'.PHP_EOL   );
 
 
 
 
        
 
-        fclose($fp);   
+        fclose($fp); 
+        
+        return $nombreArchivoDataSet;
 
     }
     
@@ -387,6 +399,26 @@ class dataSet {
     public function setCapacidad($capacidad)
     {
         $this->capacidad = $capacidad;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of directorioDataSet
+     */ 
+    public function getDirectorioDataSet()
+    {
+        return $this->directorioDataSet;
+    }
+
+    /**
+     * Set the value of directorioDataSet
+     *
+     * @return  self
+     */ 
+    public function setDirectorioDataSet($directorioDataSet)
+    {
+        $this->directorioDataSet = $directorioDataSet;
 
         return $this;
     }

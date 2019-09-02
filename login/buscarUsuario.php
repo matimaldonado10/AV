@@ -4,7 +4,7 @@
 
 
 */
-include_once ('mysql_crud.php');
+include_once ('/home/mati/git-repositorios/av/nogit/mysql_crud.php');
 class buscarUsuario {
 
 	public function getSupervisor ($usuario)

@@ -13,6 +13,7 @@ $tablas = new tablas();
 
 $RegistroSupervisor = $userlogin->getSupervisor($username);
 $RegistroRepartidor = $userlogin->getRepartidor($username);
+$RegistroArticulos = $tablas->obtenerArticulos();
 
 $response = new stdClass();
 $data = new stdClass();
@@ -123,10 +124,12 @@ if ($login)
         $dni= $RegistroRepartidor[0]["Persona_DNIRepartidor"];
         $data->dni = $dni;
         $data->msj = "repartidor";
+        $data->articulo = $RegistroArticulos;
         //$data->usuario = $RegistroRepartidor;
 
         if (strcmp($primerLogin, "true") == 0) //IGUAL A CERO SIGNIFICA QUE $primerLogin es igual a true, por lo tanto, el usuario se loguea por primera vez
         {
+
 
           /*
               Se obtienen todos los clientes del repartidor
@@ -134,8 +137,6 @@ if ($login)
          //$RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
 
           $RegistroClientes = $tablas->obtenerClientesDeRepartidor($dni);
-
-          //print_r($RegistroClientes);
 /*
             echo "<br>";
             print_r($RegistroCortoDeClientes);
@@ -145,7 +146,7 @@ if ($login)
 
 
 // SIRVE PARA QUE EL REGISTRO DE CLIENTES CONTENGA CLIENTES ÚNICOS
-$j=0;
+          $j=0;
 
             for ($i=0; $i <count($RegistroClientes) ; $i++) {
 
@@ -251,7 +252,7 @@ $j=0;
         }
         else
         {
-          // code...
+          // acá se ejecuta el código que represente el caso de logueo de un repartidor que ya tenga guardado sus datos en la app
         }
 
 
@@ -262,7 +263,7 @@ $j=0;
 }
 else
 {
-  // code...
+  // Si el login es incorrecto ejecuta este código
   $response->exito= false;
   $response->msj= "Usuario o contraseña incorrecta";
   //$response["repartidor"]= $RegistroRepartidor;
