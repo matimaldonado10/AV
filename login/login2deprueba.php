@@ -1,6 +1,9 @@
 <?php
-include_once('buscarUsuario.php');
-include_once('tablas.php');
+include_once('../path.php');
+
+include_once(path::dirProyecto.'/login/buscarUsuario.php');
+include_once(path::dirProyecto.'/login/tablas.php');
+
 
 
 $username = $_POST["usuario"];

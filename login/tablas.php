@@ -1,6 +1,8 @@
 <?php
-include_once ('/home/mati/git-repositorios/av/nogit/mysql_crud.php');
-include_once ('/home/mati/git-repositorios/av/modelo/constantesDB.php');
+include_once('../path.php');
+
+include_once (path::dirMysql);
+include_once (path::dirConstantesDB);
 class tablas
 {
 
