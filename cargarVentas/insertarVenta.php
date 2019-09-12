@@ -14,6 +14,7 @@ class insertarTablaVenta {
 	{
 		$db = new Database();
 		$db->connect();
+		
 		$envasesVacios = $db->escapeString($envasesVacios);
 		$fechaVenta = $db->escapeString($fechaVenta); // Escape any input before insert
 		$pago = $db->escapeString($pago);
