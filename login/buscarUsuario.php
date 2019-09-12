@@ -5,7 +5,7 @@
 
 */
 
-include_once('../av/path.php');
+include_once('../path.php');
 
 include_once (path::dirMysql);
 class buscarUsuario {
