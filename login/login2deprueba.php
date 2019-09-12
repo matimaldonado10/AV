@@ -1,6 +1,9 @@
 <?php
-include_once('buscarUsuario.php');
-include_once('tablas.php');
+include_once('../path.php');
+
+include_once(path::dirProyecto.'/login/buscarUsuario.php');
+include_once(path::dirProyecto.'/login/tablas.php');
+
 
 
 $username = $_POST["usuario"];
@@ -108,8 +111,13 @@ if ($login)
         // code...
         //$response->id = $RegistroSupervisor[0]["Persona_IdSupervisor"];
         //$response->dni = $RegistroSupervisor[0]["Persona_DNISupervisor"];
-        $response->msj = "supervisor";
-        $response->nuevo = $RegistroSupervisor;
+        //$response->msj = "supervisor";
+        //$response->nuevo = $RegistroSupervisor;
+
+        $data->id = $RegistroSupervisor[0]["Persona_IdSupervisor"];
+        $dni= $RegistroSupervisor[0]["Persona_DNISupervisor"];
+        $data->dni = $dni;
+        $data->msj = "supervisor";
       }
       else
       {
@@ -123,13 +131,14 @@ if ($login)
         if (strcmp($primerLogin, "true") == 0) //IGUAL A CERO SIGNIFICA QUE $primerLogin es igual a true, por lo tanto, el usuario se loguea por primera vez
         {
 
-
           /*
               Se obtienen todos los clientes del repartidor
           */
          //$RegistroClientesRepartidor = $tablas->obtenerClientesDeRepartidor($dni);
 
           $RegistroClientes = $tablas->obtenerClientesDeRepartidor($dni);
+
+          //print_r($RegistroClientes);
 /*
             echo "<br>";
             print_r($RegistroCortoDeClientes);
@@ -139,7 +148,7 @@ if ($login)
 
 
 // SIRVE PARA QUE EL REGISTRO DE CLIENTES CONTENGA CLIENTES ÚNICOS
-          $j=0;
+$j=0;
 
             for ($i=0; $i <count($RegistroClientes) ; $i++) {
 

@@ -33,7 +33,6 @@
 
         global $connect, $username;
         $statement = mysqli_prepare($connect, "SELECT * FROM supervisor WHERE Usuario = ?");
-
         mysqli_stmt_bind_param($statement, "s", $username);
         mysqli_stmt_execute($statement);
         mysqli_stmt_store_result($statement);

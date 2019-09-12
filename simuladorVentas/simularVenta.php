@@ -45,12 +45,7 @@ echo "<br>";
 echo "<br> ";
 
 
-/*
-		inicia for para las cargas y descargas de bidones dispenser
-		canilla. Todo controlado por un supervisor aleatorio y
-		asignado a un repartidor
 
-*/
 
 if ($azar->alAzar(2,2) == 1)//modificar los parámetros de alAzar(,)
 {
@@ -104,11 +99,19 @@ else
 			}
 }
 
+/*
+		inicia for para las cargas y descargas de bidones dispenser
+		canilla. Todo controlado por un supervisor aleatorio y
+		asignado a un repartidor
+
+*/
+
 for ($i=0; $i<count($registrosRepartidores)-1 ; $i++)
 	{
+				//obtiene id y dni de un supervisor al azar
+
 		$filaSupervisor = $azar->alAzar(0,count($registrosSupervisores)-1);
 
-		//obtiene id y dni de un supervisor al azar
 		$idSupervisor = $registrosSupervisores[$filaSupervisor]["Persona_IdSupervisor"];
 		$dniSupervisor = $registrosSupervisores[$filaSupervisor]["Persona_DNISupervisor"];
 
