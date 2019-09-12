@@ -74,7 +74,7 @@ class tablas
 		$db->connect();
 		$where = constantesDB::$diaDeReparto_id.' = '.constantesDB::$clientesDirectosDiaDeReparto_idRutaDeReparto.' AND  '.constantesDB::$clientesDirectosDiaDeReparto_dniCliente.' = '.constantesDB::$persona_dni.'  AND '.constantesDB::$persona_id.' = '.constantesDB::$clientesDirectosDiaDeReparto_idCliente.' AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio AND  persona.DNI  IN (SELECT DISTINCT persona.DNI FROM diadereparto JOIN clientesdirectos__diadereparto JOIN persona JOIN direccion JOIN barrio ON diadereparto.idRutaDeReparto =  clientesdirectos__diadereparto.ZonaDeReparto_idRutaDeReparto AND clientesdirectos__diadereparto.ClientesDirectos_Persona_DNICliente = persona.DNI AND persona.IdPersona = clientesdirectos__diadereparto.ClientesDirectos_Persona_IdCliente AND direccion.Persona_DNI = persona.DNI AND barrio.IdBarrio = direccion.Barrio_IdBarrio WHERE diadereparto.Repartidor_Persona_DNIRepartidor = "'.$dni.'") ';
 
-		$db->select('persona','DISTINCT persona.IdPersona, persona.DNI, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Nombre, diadereparto.Dia','direccion JOIN barrio JOIN clientesdirectos__diadereparto JOIN diadereparto',$where);
+		$db->select('persona','DISTINCT persona.IdPersona, persona.DNI, persona.Apellido, persona.Nombre, persona.Telefono, persona.Email, direccion.Direccion, direccion.Referencia, barrio.Nombre as Barrio, diadereparto.Dia','direccion JOIN barrio JOIN clientesdirectos__diadereparto JOIN diadereparto',$where);
 				// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Registros = $db->getResult();
 		$db->disconnect();
