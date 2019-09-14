@@ -4,6 +4,10 @@ class supervisor extends persona{
     private $usuario;
     private $contraseña;
 
+    public function __construct(){
+
+    }
+
     /**
      * Get the value of usuario
      */ 

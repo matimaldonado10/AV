@@ -24,7 +24,8 @@ class constantesDB{
    public static $clientesDirectosDiaDeReparto_orden            =   'Orden';
 
    public static $detalleCargaDescarga_id             =   'idDetalleCarga';
-   public static $detalleCargaDescarga_cantidad       =   'Cantidad';
+   public static $detalleCargaDescarga_carga          =   'Carga';
+   public static $detalleCargaDescarga_descarga       =   'Descarga';
    public static $detalleCargaDescarga_idCarga        =   'Carga_idCarga';
    public static $detalleCargaDescarga_idArticulo     =   'Articulo_IdArticulo';
 

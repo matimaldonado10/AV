@@ -1,6 +1,84 @@
 <?php
+include_once('../path.php');
+include_once(path::dirMysql);
+include_once(path::dirConstantesDB);
+
 include_once ('repartidor.php');
 include_once ('supervisor.php');
+include_once ('insertarCargaDescarga.php');
+include_once('detalleCargaDescarga.php');
+
+
+
+
+//data es la clave json dónde estarán el resto de los atributos
+//$data = $_POST["data"];
+
+
+$fecha = $_POST["fecha"];
+$idRepartidor = $_POST["idRepartidor"];
+$dniRepartidor = $_POST["dniRepartidor"];
+$plata = $_POST["plata"];
+$idSupervisor = $_POST["idSupervisor"];
+$dniSupervisor = $_POST["dniSupervisor"];
+
+$carga = $_POST["carga"];
+$descarga = $_POST["descarga"];
+$idArticulo = $_POST["idArticulo"];
+
+
+
+$cargaDescarga = cargaDescarga::instanciarCargaDescarga(
+    $dniSupervisor,
+    $idSupervisor,
+    $fecha,
+    $plata,
+    $idRepartidor,
+    $dniRepartidor
+);
+
+
+
+$insertar = new insertarCargaDescarga();
+$resultado = $insertar->insertarCarga(
+    $cargaDescarga->getFecha(),
+    $cargaDescarga->getPlata(),
+    $cargaDescarga->getSupervisor()->getIdPersona(),
+    $cargaDescarga->getSupervisor()->getDni(),
+    $cargaDescarga->getRepartidor()->getIdPersona(),
+    $cargaDescarga->getRepartidor()->getDni()
+);
+
+echo $resultado;
+
+$cargaDescarga->setIdCarga($resultado[0]);
+
+
+
+
+$detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
+    $carga,
+    $descarga,
+    $cargaDescarga,
+    $idArticulo
+);
+
+$resultado = $insertar->InsertarDetalleCarga(
+    $detalleCargaDescarga->getCarga(),
+    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
+    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
+    $detalleCargaDescarga->getDescarga()
+    
+);
+
+echo $resultado;
+ //var_dump($cargaDescarga);
+
+
+
+
+
+
 
 class cargaDescarga{
     private $idCarga;
@@ -10,11 +88,49 @@ class cargaDescarga{
     private $supervisor;
 
     public function __construct(){
-        $this->setRepartidor(new repartidor());
-        $this->setSupervisor(new supervisor());
+     
     }
 
-    
+    public static function instanciarCargaDescarga(
+        $dniSupervisor,
+        $idSupervisor,
+        $fecha,
+        $plata,
+        $idRepartidor,
+        $dniRepartidor
+
+
+    ){
+        $instancia = new self();
+
+
+        $instancia->setSupervisor(new supervisor());
+        $instancia->getSupervisor()->setIdPersona($idSupervisor);
+        $instancia->getSupervisor()->setDni($dniSupervisor);
+
+        $instancia->setRepartidor(new repartidor());
+        $instancia->getRepartidor()->setIdPersona($idRepartidor);
+        $instancia->getRepartidor()->setDni($dniRepartidor);
+
+        $instancia->setFecha($fecha);
+        $instancia->setPlata($plata);
+
+
+
+
+
+
+        return $instancia;
+    }
+
+    public function insertarEnBd( ){
+
+     
+
+
+        //var_dump($this);
+
+    }
 
     /**
      * Get the value of idCarga
@@ -116,3 +232,5 @@ class cargaDescarga{
         return $this;
     }
 }
+
+

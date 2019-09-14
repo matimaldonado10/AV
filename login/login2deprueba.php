@@ -115,6 +115,10 @@ if ($login)
         $dni= $RegistroSupervisor[0]["Persona_DNISupervisor"];
         $data->dni = $dni;
         $data->msj = "supervisor";
+
+      
+
+        $data->repartidores = $tablas->obtenerRepartidores();
       }
       else
       {
@@ -199,7 +203,7 @@ if ($login)
 
 
 
-//count($RegistroClientesRepartidor)-1
+      //count($RegistroClientesRepartidor)-1
           
           $data->clientes = $registroClientesFinal;
         }

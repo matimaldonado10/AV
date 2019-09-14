@@ -47,15 +47,16 @@ class insertarCargaDescarga {
 	}
 
 
-	public function InsertarDetalleCarga($cantidad, $idCarga, $idArticulo)
+	public function InsertarDetalleCarga($carga, $idCarga, $idArticulo, $descarga)
 	{
 		$db = new Database();
 		$db->connect();
-		$cantidad = $db->escapeString($cantidad);
+		$carga = $db->escapeString($carga);
+		$descarga = $db->escapeString($descarga);
 		$idCarga = $db->escapeString($idCarga);
 		$idArticulo = $db->escapeString($idArticulo);
 		
-		$db->insert('detallecargadescarga',array('Cantidad'=>$cantidad,'Carga_idCarga'=>$idCarga,'Articulo_IdArticulo'=>$idArticulo));
+		$db->insert('detallecargadescarga',array( constantesDB::$detalleCargaDescarga_carga => $carga,'Carga_idCarga'=>$idCarga,'Articulo_IdArticulo'=>$idArticulo,constantesDB::$detalleCargaDescarga_descarga => $descarga));
 
 		$res = $db->getResult();	
 		$db->disconnect();
