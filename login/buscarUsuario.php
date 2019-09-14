@@ -16,9 +16,7 @@ class buscarUsuario {
 		$db->connect();
 
 		$usuario = $db->escapeString($usuario);
-		//$contraseña = $db->escapeString($contraseña); // Escape any input before insert
 
-  //  $db->select('supervisor','*',NULL,'Usuario= '.$usuario , null, null); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 	$db->select('supervisor','*',NULL,'Usuario="'.$usuario.'"' , null, null);
     $res = $db->getResult();
 

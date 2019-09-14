@@ -3,6 +3,8 @@ include_once('../path.php');
 
 include_once(path::dirProyecto.'/login/buscarUsuario.php');
 include_once(path::dirProyecto.'/login/tablas.php');
+include_once('/home/mati/git-repositorios/av/modelo/interface.php');
+include_once(path::dirSupervisor);
 
 
 
@@ -74,6 +76,15 @@ function codificarCaracteresAUtf8($RegistroClientesRepartidor){
           return $RegistroClientesRepartidor;
 }
 
+function obtenerArtículos($persona) {
+  $arrayDeArticulos =array();
+    if ($persona instanceof interfaceArticulos) {
+      $arrayDeArticulos = $persona->obtenerTablaDeArticulos();
+    }
+    
+  return $arrayDeArticulos;
+}
+
 //verifica que la contraseña y usuario contengan un valor
 if ($password!= NULL && $username!= NULL) {
 
@@ -115,10 +126,9 @@ if ($login)
         $dni= $RegistroSupervisor[0]["Persona_DNISupervisor"];
         $data->dni = $dni;
         $data->msj = "supervisor";
-
-      
-
         $data->repartidores = $tablas->obtenerRepartidores();
+        $data->articulos = obtenerArtículos(new supervisor());
+        
       }
       else
       {

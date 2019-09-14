@@ -1,12 +1,26 @@
 <?php
-include_once ('persona.php');
-class supervisor extends persona{
+include_once('persona.php');
+include_once('interface.php');
+
+class supervisor extends persona implements interfaceArticulos{
     private $usuario;
     private $contraseña;
 
     public function __construct(){
 
     }
+
+
+    ////chequear esto más adelante
+    function obtenerTablaDeArticulos(){
+        $db = new Database();
+		$db->connect();
+		$db->select('articulo','IdArticulo, Nombre, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$Registros = $db->getResult();
+		$db->disconnect();
+		return $Registros;
+    }
+    
 
     /**
      * Get the value of usuario
