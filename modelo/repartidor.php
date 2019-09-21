@@ -1,5 +1,7 @@
 <?php
 include_once ('persona.php');
+include_once ('interface.php');
+
 class repartidor extends persona implements interfaceArticulos{
     private $usuario;
     private $contraseña;

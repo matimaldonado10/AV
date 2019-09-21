@@ -13,6 +13,8 @@ include_once('detalleCargaDescarga.php');
 
 //data es la clave json dónde estarán el resto de los atributos
 //$data = $_POST["data"];
+$data = new stdClass();
+$response = new stdClass();
 
 
 $fecha = $_POST["fecha"];
@@ -54,7 +56,7 @@ echo $resultado;
 $cargaDescarga->setIdCarga($resultado[0]);
 
 
-
+/**
 
 $detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
     $carga,
@@ -73,7 +75,11 @@ $resultado = $insertar->InsertarDetalleCarga(
 
 echo $resultado;
  //var_dump($cargaDescarga);
-
+ */
+$response->exito = true;
+$data->resultado = $resultado;
+$response->data =$data;
+echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
 
 
 

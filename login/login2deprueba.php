@@ -237,9 +237,9 @@ else
   //$response["repartidor"]= $RegistroRepartidor;
 }
 
-$response->data = $data;
-
+$response->data =$data;
 echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
+
 
 
 /*
