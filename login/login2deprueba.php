@@ -128,6 +128,7 @@ if ($login)
         $data->msj = "supervisor";
         $data->repartidores = $tablas->obtenerRepartidores();
         $data->articulos = obtenerArtículos(new supervisor());
+        //var_dump($data->articulos);
         
       }
       else

@@ -5,16 +5,15 @@ class repartidor extends persona implements interfaceArticulos{
     private $contraseña;
 
 
+
     function obtenerTablaDeArticulos(){
         $db = new Database();
 		$db->connect();
 		$db->select('articulo','IdArticulo, Nombre, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Registros = $db->getResult();
 		$db->disconnect();
-		return $Registros;
-
+        return $Registros;
     }
-
 
     /**
      * Get the value of usuario
