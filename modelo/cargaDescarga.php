@@ -20,7 +20,7 @@ $response = new stdClass();
 $fecha = $_POST["fecha"];
 $idRepartidor = $_POST["idRepartidor"];
 $dniRepartidor = $_POST["dniRepartidor"];
-$plata = $_POST["plata"];
+$plataCarga = $_POST["plataCarga"];
 $idSupervisor = $_POST["idSupervisor"];
 $dniSupervisor = $_POST["dniSupervisor"];
 
@@ -34,7 +34,7 @@ $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
     $dniSupervisor,
     $idSupervisor,
     $fecha,
-    $plata,
+    $plataCarga,
     $idRepartidor,
     $dniRepartidor
 );
@@ -44,16 +44,16 @@ $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
 $insertar = new insertarCargaDescarga();
 $resultado = $insertar->insertarCarga(
     $cargaDescarga->getFecha(),
-    $cargaDescarga->getPlata(),
+    $cargaDescarga->getPlataCarga(),
     $cargaDescarga->getSupervisor()->getIdPersona(),
     $cargaDescarga->getSupervisor()->getDni(),
     $cargaDescarga->getRepartidor()->getIdPersona(),
     $cargaDescarga->getRepartidor()->getDni()
 );
 
-echo $resultado;
+//echo $resultado;
 
-$cargaDescarga->setIdCarga($resultado[0]);
+$cargaDescarga->setIdCarga((int)$resultado[0]);
 
 
 /**
@@ -90,7 +90,7 @@ class cargaDescarga{
     private $idCarga;
     private $fecha;
     private $repartidor;
-    private $plata;
+    private $plataCarga;
     private $supervisor;
 
     public function __construct(){
@@ -101,7 +101,7 @@ class cargaDescarga{
         $dniSupervisor,
         $idSupervisor,
         $fecha,
-        $plata,
+        $plataCarga,
         $idRepartidor,
         $dniRepartidor
 
@@ -111,15 +111,15 @@ class cargaDescarga{
 
 
         $instancia->setSupervisor(new supervisor());
-        $instancia->getSupervisor()->setIdPersona($idSupervisor);
-        $instancia->getSupervisor()->setDni($dniSupervisor);
+        $instancia->getSupervisor()->setIdPersona((int)$idSupervisor);
+        $instancia->getSupervisor()->setDni((int)$dniSupervisor);
 
         $instancia->setRepartidor(new repartidor());
-        $instancia->getRepartidor()->setIdPersona($idRepartidor);
-        $instancia->getRepartidor()->setDni($dniRepartidor);
+        $instancia->getRepartidor()->setIdPersona((int)$idRepartidor);
+        $instancia->getRepartidor()->setDni((int)$dniRepartidor);
 
-        $instancia->setFecha($fecha);
-        $instancia->setPlata($plata);
+        $instancia->setFecha((string)$fecha);
+        $instancia->setPlataCarga((float)$plataCarga);
 
 
 
@@ -198,25 +198,7 @@ class cargaDescarga{
         return $this;
     }
 
-    /**
-     * Get the value of plata
-     */ 
-    public function getPlata()
-    {
-        return $this->plata;
-    }
-
-    /**
-     * Set the value of plata
-     *
-     * @return  self
-     */ 
-    public function setPlata(float $plata)
-    {
-        $this->plata = $plata;
-
-        return $this;
-    }
+   
 
     /**
      * Get the value of supervisor
@@ -234,6 +216,26 @@ class cargaDescarga{
     public function setSupervisor(supervisor $supervisor)
     {
         $this->supervisor = $supervisor;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of plataCarga
+     */ 
+    public function getPlataCarga()
+    {
+        return $this->plataCarga;
+    }
+
+    /**
+     * Set the value of plataCarga
+     *
+     * @return  self
+     */ 
+    public function setPlataCarga(float $plataCarga)
+    {
+        $this->plataCarga = $plataCarga;
 
         return $this;
     }

@@ -12,13 +12,13 @@ class insertarCargaDescarga {
 
 	
 
-	public function insertarCarga($fechaCarga, $plata, $idSupervisor, $dniSupervisor, $idRepartidor, $dniRepartidor)
+	public function insertarCarga($fechaCarga, $plataCarga, $idSupervisor, $dniSupervisor, $idRepartidor, $dniRepartidor)
 	{
 		$db = new Database();
 		$db->connect();
 		
 		$fechaCarga = $db->escapeString($fechaCarga); // Escape any input before insert
-		$plata = $db->escapeString($plata);
+		$plataCarga = $db->escapeString($plataCarga);
 		$idSupervisor = $db->escapeString($idSupervisor);
 		$dniSupervisor = $db->escapeString($dniSupervisor);
 		$idRepartidor = $db->escapeString($idRepartidor);
@@ -26,7 +26,7 @@ class insertarCargaDescarga {
 		
 		
 
-		$db->insert('cargadescarga',array('Fecha'=>$fechaCarga,'Plata'=>$plata,'Supervisor_Persona_IdSupervisor'=>$idSupervisor,'Supervisor_Persona_DNISupervisor'=>$dniSupervisor,'Repartidor_Persona_IdRepartidor'=>$idRepartidor,'Repartidor_Persona_DNIRepartidor'=>$dniRepartidor));
+		$db->insert('cargadescarga',array('Fecha'=>$fechaCarga,'PlataCarga'=>$plataCarga,'Supervisor_Persona_IdSupervisor'=>$idSupervisor,'Supervisor_Persona_DNISupervisor'=>$dniSupervisor,'Repartidor_Persona_IdRepartidor'=>$idRepartidor,'Repartidor_Persona_DNIRepartidor'=>$dniRepartidor));
 			
 			
 		
