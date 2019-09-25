@@ -1,5 +1,5 @@
 <?php
-include_once('../path.php');
+include_once('/home/mati/git-repositorios/av/path.php');
 include_once(path::dirMysql);
 include_once ('cargaDescarga.php');
 include_once ('articulo.php');  

@@ -4,7 +4,7 @@
 	RECIBE LOS DATOS DE UNA PERSONA (DNI, APELLIDO, NOMBRE, TELEFONO, MAIL) E INSERTA EN LA TABLA PERSONA DE AQUA VITAL
 
 */
-include_once('../path.php');
+include_once('/home/mati/git-repositorios/av/path.php');
 include_once(path::dirMysql);
 include_once(path::dirConstantesDB);
 class insertarCargaDescarga {
@@ -12,13 +12,14 @@ class insertarCargaDescarga {
 
 	
 
-	public function insertarCarga($fechaCarga, $plataCarga, $idSupervisor, $dniSupervisor, $idRepartidor, $dniRepartidor)
+	public function insertarCarga($fechaCarga, $plataCarga, $plataDescarga, $idSupervisor, $dniSupervisor, $idRepartidor, $dniRepartidor)
 	{
 		$db = new Database();
 		$db->connect();
 		
 		$fechaCarga = $db->escapeString($fechaCarga); // Escape any input before insert
 		$plataCarga = $db->escapeString($plataCarga);
+		$plataDescarga = $db->escapeString($plataDescarga);
 		$idSupervisor = $db->escapeString($idSupervisor);
 		$dniSupervisor = $db->escapeString($dniSupervisor);
 		$idRepartidor = $db->escapeString($idRepartidor);
@@ -26,7 +27,7 @@ class insertarCargaDescarga {
 		
 		
 
-		$db->insert('cargadescarga',array('Fecha'=>$fechaCarga,'PlataCarga'=>$plataCarga,'Supervisor_Persona_IdSupervisor'=>$idSupervisor,'Supervisor_Persona_DNISupervisor'=>$dniSupervisor,'Repartidor_Persona_IdRepartidor'=>$idRepartidor,'Repartidor_Persona_DNIRepartidor'=>$dniRepartidor));
+		$db->insert('cargadescarga',array('Fecha'=>$fechaCarga,'PlataCarga'=>$plataCarga,'PlataDescarga'=>$plataDescarga,'Supervisor_Persona_IdSupervisor'=>$idSupervisor,'Supervisor_Persona_DNISupervisor'=>$dniSupervisor,'Repartidor_Persona_IdRepartidor'=>$idRepartidor,'Repartidor_Persona_DNIRepartidor'=>$dniRepartidor));
 			
 			
 		

@@ -1,5 +1,5 @@
 <?php
-include_once('../path.php');
+include_once('/home/mati/git-repositorios/av/path.php');
 include_once(path::dirMysql);
 include_once(path::dirConstantesDB);
 
@@ -10,87 +10,12 @@ include_once('detalleCargaDescarga.php');
 
 
 
-
-//data es la clave json dónde estarán el resto de los atributos
-//$data = $_POST["data"];
-$data = new stdClass();
-$response = new stdClass();
-
-
-$fecha = $_POST["fecha"];
-$idRepartidor = $_POST["idRepartidor"];
-$dniRepartidor = $_POST["dniRepartidor"];
-$plataCarga = $_POST["plataCarga"];
-$idSupervisor = $_POST["idSupervisor"];
-$dniSupervisor = $_POST["dniSupervisor"];
-
-$carga = $_POST["carga"];
-$descarga = $_POST["descarga"];
-$idArticulo = $_POST["idArticulo"];
-
-
-
-$cargaDescarga = cargaDescarga::instanciarCargaDescarga(
-    $dniSupervisor,
-    $idSupervisor,
-    $fecha,
-    $plataCarga,
-    $idRepartidor,
-    $dniRepartidor
-);
-
-
-
-$insertar = new insertarCargaDescarga();
-$resultado = $insertar->insertarCarga(
-    $cargaDescarga->getFecha(),
-    $cargaDescarga->getPlataCarga(),
-    $cargaDescarga->getSupervisor()->getIdPersona(),
-    $cargaDescarga->getSupervisor()->getDni(),
-    $cargaDescarga->getRepartidor()->getIdPersona(),
-    $cargaDescarga->getRepartidor()->getDni()
-);
-
-//echo $resultado;
-
-$cargaDescarga->setIdCarga((int)$resultado[0]);
-
-
-/**
-
-$detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
-    $carga,
-    $descarga,
-    $cargaDescarga,
-    $idArticulo
-);
-
-$resultado = $insertar->InsertarDetalleCarga(
-    $detalleCargaDescarga->getCarga(),
-    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
-    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
-    $detalleCargaDescarga->getDescarga()
-    
-);
-
-echo $resultado;
- //var_dump($cargaDescarga);
- */
-$response->exito = true;
-$data->resultado = $resultado;
-$response->data =$data;
-echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
-
-
-
-
-
-
 class cargaDescarga{
     private $idCarga;
     private $fecha;
     private $repartidor;
     private $plataCarga;
+    private $plataDescarga;
     private $supervisor;
 
     public function __construct(){
@@ -102,6 +27,7 @@ class cargaDescarga{
         $idSupervisor,
         $fecha,
         $plataCarga,
+        $plataDescarga,
         $idRepartidor,
         $dniRepartidor
 
@@ -120,6 +46,8 @@ class cargaDescarga{
 
         $instancia->setFecha((string)$fecha);
         $instancia->setPlataCarga((float)$plataCarga);
+
+        $instancia->setPlataDescarga((float)$plataDescarga);
 
 
 
@@ -239,6 +167,111 @@ class cargaDescarga{
 
         return $this;
     }
+
+    /**
+     * Get the value of plataDescarga
+     */ 
+    public function getPlataDescarga()
+    {
+        return $this->plataDescarga;
+    }
+
+    /**
+     * Set the value of plataDescarga
+     *
+     * @return  self
+     */ 
+    public function setPlataDescarga(float $plataDescarga)
+    {
+        $this->plataDescarga = $plataDescarga;
+
+        return $this;
+    }
 }
 
+function ejecutarCargaDescarga(){
 
+
+
+//data es la clave json dónde estarán el resto de los atributos
+//$data = $_POST["data"];
+
+
+$data = new stdClass();
+$response = new stdClass();
+
+
+$fecha = $_POST["fecha"];
+$idRepartidor = $_POST["idRepartidor"];
+$dniRepartidor = $_POST["dniRepartidor"];
+$plataCarga = $_POST["plataCarga"];
+$plataDescarga = $_POST["plataDescarga"];
+$idSupervisor = $_POST["idSupervisor"];
+$dniSupervisor = $_POST["dniSupervisor"];
+
+$carga = $_POST["carga"];
+$descarga = $_POST["descarga"];
+$idArticulo = $_POST["idArticulo"];
+
+
+
+$cargaDescarga = cargaDescarga::instanciarCargaDescarga(
+    $dniSupervisor,
+    $idSupervisor,
+    $fecha,
+    $plataCarga,
+    $plataDescarga,
+    $idRepartidor,
+    $dniRepartidor
+);
+
+
+
+$insertar = new insertarCargaDescarga();
+$resultado = $insertar->insertarCarga(
+    $cargaDescarga->getFecha(),
+    $cargaDescarga->getPlataCarga(),
+    $cargaDescarga->getPlataDescarga(),
+    $cargaDescarga->getSupervisor()->getIdPersona(),
+    $cargaDescarga->getSupervisor()->getDni(),
+    $cargaDescarga->getRepartidor()->getIdPersona(),
+    $cargaDescarga->getRepartidor()->getDni()
+);
+
+//echo $resultado;
+
+$cargaDescarga->setIdCarga((int)$resultado[0]);
+
+
+/**
+
+$detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
+    $carga,
+    $descarga,
+    $cargaDescarga,
+    $idArticulo
+);
+
+$resultado = $insertar->InsertarDetalleCarga(
+    $detalleCargaDescarga->getCarga(),
+    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
+    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
+    $detalleCargaDescarga->getDescarga()
+    
+);
+
+
+echo $resultado;
+ //var_dump($cargaDescarga);
+*/
+
+$response->exito = true;
+$data->resultado = $resultado;
+$response->data =$data;
+echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
+
+
+
+}
+
+ejecutarCargaDescarga();
