@@ -189,18 +189,130 @@ class cargaDescarga{
     }
 }
 
+function algo(){
+
+}
+
 function ejecutarCargaDescarga(){
 
+    $archivo = file_get_contents("/home/mati/Documentos/aquavital/cargaDescarga.json");
+    $post = json_decode($archivo, true);
 
 
-//data es la clave json dónde estarán el resto de los atributos
-//$data = $_POST["data"];
+
+    // Datos obtenidos del json
+    $data = $post['data'];
+
+    $fecha = $data['fecha'];
+    $idRepartidor = $data['idRepartidor'];
+    $dniRepartidor = $data['dniRepartidor'];
+    $idSupervisor = $data['idSupervisor'];
+    $dniSupervisor = $data['dniSupervisor'];
+    $tandas = $data['tandas'];
+
+    if (!empty($tandas)) {
+        
+        for($i=0;$i<count($tandas);$i++){
+            $plataCarga = 0;
+            $plataDescarga = 0;
+            $carga = 0;
+            $descarga = 0;
+            $idArticulo = 0;
+
+            $artículo = $tandas[$i];
+
+            if (!empty($artículo[0]['plataCarga'])) {
+                $plataCarga = $artículo[0]['plataCarga'];
+            }
+            if(!empty ($artículo[0]['plataDescarga'])) {
+                $plataDescarga = $artículo[0]['plataDescarga'];
+            }
+
+            $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
+                $dniSupervisor,
+                $idSupervisor,
+                $fecha,
+                $plataCarga,
+                $plataDescarga,
+                $idRepartidor,
+                $dniRepartidor
+            );
+        
+            
+        
+            $insertar = new insertarCargaDescarga();
+        
+            //LA FUNCION INSERTAR CARGA DEBE ESTAR EN CARGADESCARGA
+            $resultado = $insertar->insertarCarga(
+                $cargaDescarga->getFecha(),
+                $cargaDescarga->getPlataCarga(),
+                $cargaDescarga->getPlataDescarga(),
+                $cargaDescarga->getSupervisor()->getIdPersona(),
+                $cargaDescarga->getSupervisor()->getDni(),
+                $cargaDescarga->getRepartidor()->getIdPersona(),
+                $cargaDescarga->getRepartidor()->getDni()
+            );
+        
+            //echo $resultado;
+        
+            $cargaDescarga->setIdCarga((int)$resultado[0]);
+        
+            echo $plataCarga.' '.$plataDescarga;
 
 
-$data = new stdClass();
-$response = new stdClass();
+            for($j=1;$j<count($artículo);$j++){
+               
+                            
+                $carga = $artículo[$j]['carga'];
+                $descarga = $artículo[$j]['descarga'];
+                $idArticulo = $artículo[$j]['idArtículo'];
+
+                echo '<br>';
+
+                echo $carga.' '.$descarga.' '.$idArticulo;
 
 
+
+                $detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
+                    $carga,
+                    $descarga,
+                    $cargaDescarga,
+                    $idArticulo
+                );
+                
+                $resultado = $insertar->InsertarDetalleCarga(
+                    $detalleCargaDescarga->getCarga(),
+                    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
+                    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
+                    $detalleCargaDescarga->getDescarga()
+                    
+                );
+                
+            }
+            
+        }
+
+       
+
+
+   
+
+        
+    
+      
+    }else{
+       return false; 
+    }
+
+
+   
+
+    
+
+
+
+/** 
+ * 
 $fecha = $_POST["fecha"];
 $idRepartidor = $_POST["idRepartidor"];
 $dniRepartidor = $_POST["dniRepartidor"];
@@ -213,34 +325,11 @@ $carga = $_POST["carga"];
 $descarga = $_POST["descarga"];
 $idArticulo = $_POST["idArticulo"];
 
-
-
-$cargaDescarga = cargaDescarga::instanciarCargaDescarga(
-    $dniSupervisor,
-    $idSupervisor,
-    $fecha,
-    $plataCarga,
-    $plataDescarga,
-    $idRepartidor,
-    $dniRepartidor
-);
+*/
 
 
 
-$insertar = new insertarCargaDescarga();
-$resultado = $insertar->insertarCarga(
-    $cargaDescarga->getFecha(),
-    $cargaDescarga->getPlataCarga(),
-    $cargaDescarga->getPlataDescarga(),
-    $cargaDescarga->getSupervisor()->getIdPersona(),
-    $cargaDescarga->getSupervisor()->getDni(),
-    $cargaDescarga->getRepartidor()->getIdPersona(),
-    $cargaDescarga->getRepartidor()->getDni()
-);
 
-//echo $resultado;
-
-$cargaDescarga->setIdCarga((int)$resultado[0]);
 
 
 /**
@@ -265,6 +354,10 @@ echo $resultado;
  //var_dump($cargaDescarga);
 */
 
+
+
+$data = new stdClass();
+$response = new stdClass();
 $response->exito = true;
 $data->resultado = $resultado;
 $response->data =$data;
