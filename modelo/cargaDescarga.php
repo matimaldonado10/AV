@@ -212,9 +212,7 @@ function ejecutarCargaDescarga(){
         for($i=0;$i<count($tandas);$i++){
             $plataCarga = 0;
             $plataDescarga = 0;
-            $carga = 0;
-            $descarga = 0;
-            $idArticulo = 0;
+          
 
             $artículo = $tandas[$i];
 
@@ -259,9 +257,24 @@ function ejecutarCargaDescarga(){
 
             for($j=1;$j<count($artículo);$j++){
                
-                            
-                $carga = $artículo[$j]['carga'];
-                $descarga = $artículo[$j]['descarga'];
+               
+                
+                
+                if (empty($artículo[$j]['carga'])) {
+                    $carga = 0;
+                }else {
+                    $carga = $artículo[$j]['carga'];
+                }
+
+                if (empty($artículo[$j]['descarga'])) {
+                    $descarga = 0;
+                }else {
+                    $descarga = $artículo[$j]['descarga'];
+
+                }
+
+                
+             
                 $idArticulo = $artículo[$j]['idArtículo'];
 
                 echo '<br>';
@@ -307,49 +320,6 @@ function ejecutarCargaDescarga(){
     
 
 
-
-/** 
- * 
-$fecha = $_POST["fecha"];
-$idRepartidor = $_POST["idRepartidor"];
-$dniRepartidor = $_POST["dniRepartidor"];
-$plataCarga = $_POST["plataCarga"];
-$plataDescarga = $_POST["plataDescarga"];
-$idSupervisor = $_POST["idSupervisor"];
-$dniSupervisor = $_POST["dniSupervisor"];
-
-$carga = $_POST["carga"];
-$descarga = $_POST["descarga"];
-$idArticulo = $_POST["idArticulo"];
-
-*/
-
-
-
-
-
-
-/**
-
-$detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
-    $carga,
-    $descarga,
-    $cargaDescarga,
-    $idArticulo
-);
-
-$resultado = $insertar->InsertarDetalleCarga(
-    $detalleCargaDescarga->getCarga(),
-    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
-    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
-    $detalleCargaDescarga->getDescarga()
-    
-);
-
-
-echo $resultado;
- //var_dump($cargaDescarga);
-*/
 
 
 
