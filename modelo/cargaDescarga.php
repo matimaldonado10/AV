@@ -189,9 +189,6 @@ class cargaDescarga{
     }
 }
 
-function algo(){
-
-}
 
 function ejecutarCargaDescarga(){
 
