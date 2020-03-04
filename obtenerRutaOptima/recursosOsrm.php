@@ -15,6 +15,7 @@ class recursosOsrm {
     private $deposito; //por defecto se carga con las coordenadas de av
     private $coordenadasDeClientes;
     private $nombreDeposito;
+    private $responseOsrm;
    
     public function __construct(){
         $this->setDeposito(array(coordenadasGeograficas::construirObjetoConLatitudLongitud(-26.78427,-60.44692)));
@@ -72,11 +73,66 @@ class recursosOsrm {
         return $data;
     }
 
+    private function crearSolicitudTripYEnviar(){
+        $ch = curl_init();
+        $coordenadas = $this->traducirCoordenadasParaOsrm();
+
+        $url = 'http://127.0.0.1:5000/trip/v1/driving/';
+        $url .= $coordenadas;
+    
+        $anotation = '?source=first&destination=any';
+        $url .= $anotation;
+    
+    
+        //'http://127.0.0.1:5000/trip/v1/driving/-60.44634,-26.77638;-60.41733,-26.79080;-60.44657,-26.80139'
+        curl_setopt($ch, CURLOPT_URL, $url );
+        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        
+        $data = curl_exec($ch);
+        
+        curl_close($ch);
+
+        return $data;
+    }
+
+    private function crearSolicitudRouteYEnviar(){
+        $ch = curl_init();
+        $coordenadas = $this->traducirCoordenadasParaOsrm();
+
+        $url = 'http://127.0.0.1:5000/route/v1/driving/';
+        $url .= $coordenadas;
+    
+        $anotation = '?annotations=distance';
+        $url .= $anotation;
+    
+    
+        //'http://127.0.0.1:5000/trip/v1/driving/-60.44634,-26.77638;-60.41733,-26.79080;-60.44657,-26.80139'
+        curl_setopt($ch, CURLOPT_URL, $url );
+        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        
+        $data = curl_exec($ch);
+        
+        curl_close($ch);
+
+        return $data;
+    }
+
     public function obtenerMatrizDeDistancia(){
     
         $data = $this->crearSolicitudYEnviar();
             
         $respuestaDelServidor = json_decode($data);
+
+        $this->setResponseOsrm(json_decode($this->crearSolicitudRouteYEnviar()));
+
+
+
 
         return $this->extraerMatrizDelResponse($respuestaDelServidor);
 
@@ -175,6 +231,26 @@ class recursosOsrm {
     public function setNombreDeposito($nombreDeposito)
     {
         $this->nombreDeposito = $nombreDeposito;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of responseOsrm
+     */ 
+    public function getResponseOsrm()
+    {
+        return $this->responseOsrm;
+    }
+
+    /**
+     * Set the value of responseOsrm
+     *
+     * @return  self
+     */ 
+    public function setResponseOsrm($responseOsrm)
+    {
+        $this->responseOsrm = $responseOsrm;
 
         return $this;
     }

@@ -56,6 +56,8 @@ class rutaOptima {
     public function obtenerListaDeClientesDeTodosLosRepartidoresEnUnDia(){
         /**
          * Consulta la DB. Busca todos los repartidores y sus clientes en un día
+         * 
+         * Como prueba inicial se realiza con el día LUNES
          */
 
          //HACER
@@ -66,7 +68,7 @@ class rutaOptima {
         $sql = 'SELECT clientesdir.Repartidor_Persona_IdRepartidor, clientesdir.ClientesDirectos_Persona_IdCliente, clientesdir.Direccion, clientesdir.Barrio_IdBarrio, clientesdir.Referencia, clientesdir.Latitud, clientesdir.Longitud, clientesdir.Barrio, p.Apellido, p.Nombre
         FROM (SELECT idRRC.Repartidor_Persona_IdRepartidor, idRRC.ClientesDirectos_Persona_IdCliente, d.Direccion, d.Barrio_IdBarrio, d.Referencia, d.Latitud, d.Longitud, b.Nombre as Barrio
 	        FROM (SELECT dr.Repartidor_Persona_IdRepartidor, cddr.ClientesDirectos_Persona_IdCliente
-		        FROM (SELECT idRutaDeReparto, Repartidor_Persona_IdRepartidor FROM diadereparto WHERE Dia = "LUNES") as dr, clientesdirectos__diadereparto as cddr
+		        FROM (SELECT idRutaDeReparto, Repartidor_Persona_IdRepartidor FROM diadereparto WHERE Dia = "MARTES") as dr, clientesdirectos__diadereparto as cddr
 		        WHERE dr.idRutaDeReparto = cddr.ZonaDeReparto_idRutaDeReparto) as idRRC, direccion as d, barrio as b 
 	        WHERE idRRC.ClientesDirectos_Persona_IdCliente = d.Persona_IdPersona AND d.Barrio_IdBarrio = b.IdBarrio) as clientesdir , persona p 
         WHERE p.IdPersona = clientesdir.ClientesDirectos_Persona_IdCliente';
@@ -86,7 +88,7 @@ class rutaOptima {
         $arrayObjetosDeOsrm = array();
         for ($indice=0; $indice < 1; $indice++) { 
 
-//count($this->getArrayRepartidores()
+        //count($this->getArrayRepartidores()
 
             $arrayDeCoordenadasDeClientes = $this->obtenerClientesDelRepartidor($indice); 
 
@@ -138,7 +140,8 @@ class rutaOptima {
         $arrayDeClientes = array();
 
         for ($i=0; $i <count($this->getArrayDeClientesDeRepartidoresEnUnDia()) ; $i++) {
-
+            // Por ser una prueba inicial, sólo se trabaja con clientes del día lunes y un sólo repartidor (el primero de la tabla repartidores)
+            
             if ($this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$diaDeReparto_idRepartidor] === $this->getArrayRepartidores()[$indice][constantesDB::$repartidor_id]) {
                 $arrayDeClientes[] = coordenadasGeograficas::construirObjetoConLatitudLongitud($this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$direccion_latitud],$this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$direccion_longitud]);
             }
@@ -146,6 +149,7 @@ class rutaOptima {
 
         } 
 
+       
         return $arrayDeClientes;
 
     }
@@ -408,6 +412,14 @@ $rutaOptima = new rutaOptima();
 
 $rutaOptima->iniciarBusquedaDeClientes();
 $rutaOptima->enviarClientesAlServidorOsrm();
+
+print_r($rutaOptima->getArrayDatosOsrm()[0]->getRecursoOsrm()->getResponseOsrm());
+
+echo('<br>');
+echo('<br>');
+echo('<br>');
+echo('<br>');
+
 $rutaOptima->transformarDatosParaOptaplanner();
 $rutaOptima->enviarDataSetAOptaplannerParaOptimizacionDeRutas();
 

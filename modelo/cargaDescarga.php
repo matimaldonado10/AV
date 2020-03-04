@@ -192,145 +192,171 @@ class cargaDescarga{
 
 function ejecutarCargaDescarga(){
 
-    $archivo = file_get_contents("/home/mati/Documentos/aquavital/cargaDescarga.json");
-    $post = json_decode($archivo, true);
+    //$archivo = file_get_contents("/home/mati/Documentos/aquavital/cargaDescarga.json");
+    //$post = json_decode($archivo, true);
 
 
 
     // Datos obtenidos del json
-    $data = $post['data'];
+    //$data = $post['data'];
 
-    $fecha = $data['fecha'];
-    $idRepartidor = $data['idRepartidor'];
-    $dniRepartidor = $data['dniRepartidor'];
-    $idSupervisor = $data['idSupervisor'];
-    $dniSupervisor = $data['dniSupervisor'];
-    $tandas = $data['tandas'];
+   
 
-    if (!empty($tandas)) {
+      //Make sure that it is a POST request.
+        if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+            throw new Exception('Request method must be POST!');
+        }
         
-        for($i=0;$i<count($tandas);$i++){
-            $plataCarga = 0;
-            $plataDescarga = 0;
-          
-
-            $artículo = $tandas[$i];
-
-            if (!empty($artículo[0]['plataCarga'])) {
-                $plataCarga = $artículo[0]['plataCarga'];
-            }
-            if(!empty ($artículo[0]['plataDescarga'])) {
-                $plataDescarga = $artículo[0]['plataDescarga'];
-            }
-
-            $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
-                $dniSupervisor,
-                $idSupervisor,
-                $fecha,
-                $plataCarga,
-                $plataDescarga,
-                $idRepartidor,
-                $dniRepartidor
-            );
+        //Make sure that the content type of the POST request has been set to application/json
+        $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+        if(strcasecmp($contentType, 'application/json') != 0){
+            throw new Exception('Content type must be: application/json');
+        }
         
-            
+        //Receive the RAW post data.
+        $content = trim(file_get_contents("php://input"));
         
-            $insertar = new insertarCargaDescarga();
+        //Attempt to decode the incoming RAW post data from JSON.
+        $decoded = json_decode($content, true);
         
-            //LA FUNCION INSERTAR CARGA DEBE ESTAR EN CARGADESCARGA
-            $resultado = $insertar->insertarCarga(
-                $cargaDescarga->getFecha(),
-                $cargaDescarga->getPlataCarga(),
-                $cargaDescarga->getPlataDescarga(),
-                $cargaDescarga->getSupervisor()->getIdPersona(),
-                $cargaDescarga->getSupervisor()->getDni(),
-                $cargaDescarga->getRepartidor()->getIdPersona(),
-                $cargaDescarga->getRepartidor()->getDni()
-            );
-        
-            //echo $resultado;
-        
-            $cargaDescarga->setIdCarga((int)$resultado[0]);
-        
-            echo $plataCarga.' '.$plataDescarga;
-
-
-            for($j=1;$j<count($artículo);$j++){
-               
-               
-                
-                
-                if (empty($artículo[$j]['carga'])) {
-                    $carga = 0;
-                }else {
-                    $carga = $artículo[$j]['carga'];
-                }
-
-                if (empty($artículo[$j]['descarga'])) {
-                    $descarga = 0;
-                }else {
-                    $descarga = $artículo[$j]['descarga'];
-
-                }
-
-                
-             
-                $idArticulo = $artículo[$j]['idArtículo'];
-
-                echo '<br>';
-
-                echo $carga.' '.$descarga.' '.$idArticulo;
-
-
-
-                $detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
-                    $carga,
-                    $descarga,
-                    $cargaDescarga,
-                    $idArticulo
-                );
-                
-                $resultado = $insertar->InsertarDetalleCarga(
-                    $detalleCargaDescarga->getCarga(),
-                    $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
-                    $detalleCargaDescarga->getArticulo()->getIdArticulo(),
-                    $detalleCargaDescarga->getDescarga()
-                    
-                );
-                
-            }
-            
+        //If json_decode failed, the JSON is invalid.
+        if(!is_array($decoded)){
+            throw new Exception('Received content contained invalid JSON!');
         }
 
-       
+      
+            $fecha = $decoded['fecha'];
+
+            $idRepartidor = $decoded['idRepartidor'];
+            $dniRepartidor = $decoded['dniRepartidor'];
+            $idSupervisor = $decoded['idSupervisor'];
+            $dniSupervisor = $decoded['dniSupervisor'];
+            //$tandas = json_decode($decoded['tandas'], true); 
+            $tandas = $decoded['tandas']; 
+
+            if (!empty($tandas)) {
+                
+                for($i=0;$i<count($tandas);$i++){
+                    $plataCarga = 0;
+                    $plataDescarga = 0;
+                
+
+                    $artículo = $tandas[$i];
+
+                    if (!empty($artículo[0]['plataCarga'])) {
+                        $plataCarga = $artículo[0]['plataCarga'];
+                    }
+                    if(!empty ($artículo[0]['plataDescarga'])) {
+                        $plataDescarga = $artículo[0]['plataDescarga'];
+                    }
+
+                    $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
+                        $dniSupervisor,
+                        $idSupervisor,
+                        $fecha,
+                        $plataCarga,
+                        $plataDescarga,
+                        $idRepartidor,
+                        $dniRepartidor
+                    );
+                
+                    
+                
+                    $insertar = new insertarCargaDescarga();
+                
+                    //LA FUNCION INSERTAR CARGA DEBE ESTAR EN CARGADESCARGA
+                    $resultado = $insertar->insertarCarga(
+                        $cargaDescarga->getFecha(),
+                        $cargaDescarga->getPlataCarga(),
+                        $cargaDescarga->getPlataDescarga(),
+                        $cargaDescarga->getSupervisor()->getIdPersona(),
+                        $cargaDescarga->getSupervisor()->getDni(),
+                        $cargaDescarga->getRepartidor()->getIdPersona(),
+                        $cargaDescarga->getRepartidor()->getDni()
+                    );
+                
+                    //echo $resultado;
+                
+                    $cargaDescarga->setIdCarga((int)$resultado[0]);
+                
+
+                    for($j=1;$j<count($artículo);$j++){
+                    
+                    
+                        
+                        
+                        if (empty($artículo[$j]['carga'])) {
+                            $carga = 0;
+                        }else {
+                            $carga = $artículo[$j]['carga'];
+                        }
+
+                        if (empty($artículo[$j]['descarga'])) {
+                            $descarga = 0;
+                        }else {
+                            $descarga = $artículo[$j]['descarga'];
+
+                        }
+
+                        
+                    
+                        $idArticulo = $artículo[$j]['idArtículo'];
+
+                      
 
 
-   
+                        $detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
+                            $carga,
+                            $descarga,
+                            $cargaDescarga,
+                            $idArticulo
+                        );
+                        
+                        $resultado = $insertar->InsertarDetalleCarga(
+                            $detalleCargaDescarga->getCarga(),
+                            $detalleCargaDescarga->getCargaDescarga()->getIdCarga(),
+                            $detalleCargaDescarga->getArticulo()->getIdArticulo(),
+                            $detalleCargaDescarga->getDescarga()
+                            
+                        );
+                        
+                        //echo $resultado;
+                    }
+                    
+                }
+
+            
+
 
         
+
+                
+            
+            
+            }else{
+            return false; 
+            }
+
+
+        
+
+            
+
+
+
+
+
+        $data = new stdClass();
+        $response = new stdClass();
+        $response->exito = true;
+        //$data->resultado = $resultado;
+        //$response->data =$data;
+        echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
+
+
     
-      
-    }else{
-       return false; 
-    }
-
-
-   
 
     
-
-
-
-
-
-$data = new stdClass();
-$response = new stdClass();
-$response->exito = true;
-$data->resultado = $resultado;
-$response->data =$data;
-echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
-
-
 
 }
 
