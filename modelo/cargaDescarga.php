@@ -192,15 +192,16 @@ class cargaDescarga{
 
 function ejecutarCargaDescarga(){
 
-    //$archivo = file_get_contents("/home/mati/Documentos/aquavital/cargaDescarga.json");
-    //$post = json_decode($archivo, true);
-
-
-
-    // Datos obtenidos del json
-    //$data = $post['data'];
-
-   
+    /**Este código sirve para leer un json desde un archivo
+     * 
+     * $archivo = file_get_contents("/home/mati/Documentos/aquavital/cargaDescarga.json");
+     * $post = json_decode($archivo, true);
+     * $data = $post['data'];
+     */
+  
+     /**EL SIGUIENTE BLOQUE DE CÓDIGO SIRVE PARA ASEGURARSE QUE LA SOLICITUD CUMPLA CIERTAS CONDICIONES
+      * Y NO SIGA EJECUTANDO CON UNA SOLICITUD ERRONEA
+      */
 
       //Make sure that it is a POST request.
         if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
@@ -224,14 +225,17 @@ function ejecutarCargaDescarga(){
             throw new Exception('Received content contained invalid JSON!');
         }
 
-      
-            $fecha = $decoded['fecha'];
+        //El código que sigue se ejecuta sólo si se cumplen la condiciones más arriba
+        
+        // SE LEEN LOS VALORES DE LAS CLAVES CONTENIDAS EN LA SOLICITUD
 
+            $fecha = $decoded['fecha'];
             $idRepartidor = $decoded['idRepartidor'];
             $dniRepartidor = $decoded['dniRepartidor'];
             $idSupervisor = $decoded['idSupervisor'];
             $dniSupervisor = $decoded['dniSupervisor'];
-            //$tandas = json_decode($decoded['tandas'], true); 
+
+
             $tandas = $decoded['tandas']; 
 
             if (!empty($tandas)) {
@@ -250,6 +254,13 @@ function ejecutarCargaDescarga(){
                         $plataDescarga = $artículo[0]['plataDescarga'];
                     }
 
+                    /**
+                     * SE CREA EL OBJETO CARGADESCARGA
+                     * SIRVE PARA ASIGNARLE LOS DATOS NECESARIOS EN LA CARGA DESCARGA
+                     * COMPRUEBA QUE LOS DATOS SEAN DE TIPOS VÁLIDOS
+                     * 
+                     */
+
                     $cargaDescarga = cargaDescarga::instanciarCargaDescarga(
                         $dniSupervisor,
                         $idSupervisor,
@@ -261,7 +272,11 @@ function ejecutarCargaDescarga(){
                     );
                 
                     
-                
+                /**
+                 * INSERTAR CARGADESCARGA ES UNA CLASE QUE SE COMUNICA CON EL HELPER
+                 * DE LA CLASE MYSQLCRUD. SIRVE PARA REALIZAR LAS INSERCIONES EN LA BD, 
+                 * TANTO DE CARGADESCARGA COMO DE DETALLEDECARGADESCARGA
+                 */
                     $insertar = new insertarCargaDescarga();
                 
                     //LA FUNCION INSERTAR CARGA DEBE ESTAR EN CARGADESCARGA
@@ -302,7 +317,10 @@ function ejecutarCargaDescarga(){
                     
                         $idArticulo = $artículo[$j]['idArtículo'];
 
-                      
+                      /**
+                       * CONTIENE LOS PARAMETROS NECESARIOS PARA CREAR LA INSTANCIA DE 
+                       * DETALLE DE CARGADESCARGA
+                       */
 
 
                         $detalleCargaDescarga = detalleCargaDescarga::instanciarDetalleCargaDescarga(
