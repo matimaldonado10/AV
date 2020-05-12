@@ -5,6 +5,7 @@ class articulo{
     private $precio;
 
 
+
     /**
      * Get the value of idArticulo
      */ 

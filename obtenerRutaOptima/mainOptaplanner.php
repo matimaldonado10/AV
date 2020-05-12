@@ -35,7 +35,8 @@ class mainOptaplanner {
       
                         $respuestaDelServidor = $this->getRecursos() -> actualizarSolucion($cookie);
                         if ($this->esRespuestaValida($respuestaDelServidor)) {
-                           echo $respuestaDelServidor['respuestaDeOptaplanner'];
+                           //echo $respuestaDelServidor['respuestaDeOptaplanner'];
+                           return $respuestaDelServidor['respuestaDeOptaplanner']; 
             
                            
                         } else {

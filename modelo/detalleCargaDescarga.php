@@ -1,16 +1,39 @@
 <?php
+include_once('/home/mati/git-repositorios/av/path.php');
+include_once(path::dirMysql);
 include_once ('cargaDescarga.php');
 include_once ('articulo.php');  
 
 class detalleCargaDescarga{
     private $id;
-    private $cantidad;
+    private $carga;
+    private $descarga;
     private $cargaDescarga;
     private $articulo;
 
-    private function __construct(){
-        $this->setCargaDescarga(new cargaDescarga());
-        $this->setArticulo(new articulo());
+    function __construct(){
+        
+    }
+
+
+    public static function instanciarDetalleCargaDescarga($carga, $descarga, $cargaDescarga, $idArticulo){
+        $instancia = new self();
+
+        $instancia->setCarga($carga);
+        $instancia->setDescarga($descarga);
+        
+        $instancia->setArticulo(new articulo());
+        $instancia->getArticulo()->setIdArticulo($idArticulo);
+
+        $instancia->setCargaDescarga($cargaDescarga);
+
+        return $instancia;
+
+    }
+
+    public function insertarEnBd(){
+        //copiar código de alguna inserción en BD
+
     }
     
 
@@ -26,25 +49,7 @@ class detalleCargaDescarga{
         return $this;
     }
 
-    /**
-     * Get the value of cantidad
-     */ 
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
-    /**
-     * Set the value of cantidad
-     *
-     * @return  self
-     */ 
-    public function setCantidad($cantidad)
-    {
-        $this->cantidad = $cantidad;
-
-        return $this;
-    }
+    
 
     /**
      * Get the value of cargaDescarga
@@ -82,6 +87,46 @@ class detalleCargaDescarga{
     public function setArticulo(articulo $articulo)
     {
         $this->articulo = $articulo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of carga
+     */ 
+    public function getCarga()
+    {
+        return $this->carga;
+    }
+
+    /**
+     * Set the value of carga
+     *
+     * @return  self
+     */ 
+    public function setCarga(int $carga)
+    {
+        $this->carga = $carga;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of descarga
+     */ 
+    public function getDescarga()
+    {
+        return $this->descarga;
+    }
+
+    /**
+     * Set the value of descarga
+     *
+     * @return  self
+     */ 
+    public function setDescarga(int $descarga)
+    {
+        $this->descarga = $descarga;
 
         return $this;
     }

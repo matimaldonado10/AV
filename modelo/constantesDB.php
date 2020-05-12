@@ -11,7 +11,8 @@ class constantesDB{
    public static $cargaDescarga_fecha              =   'Fecha';
    public static $cargaDescarga_idRepartidor       =   'Repartidor_Persona_IdRepartidor';
    public static $cargaDescarga_dniRepartidor      =   'Repartidor_Persona_DNIRepartidor';
-   public static $cargaDescarga_plata              =   'Plata';
+   public static $cargaDescarga_plataCarga         =   'PlataCarga';
+   public static $cargaDescarga_plataDescarga      =   'PlataDescarga';
    public static $cargaDescarga_idSupervisor       =   'Supervisor_Persona_IdSupervisor';
    public static $cargaDescarga_dniSupervisor      =   'Supervisor_Persona_DNISupervisor';
 
@@ -24,7 +25,8 @@ class constantesDB{
    public static $clientesDirectosDiaDeReparto_orden            =   'Orden';
 
    public static $detalleCargaDescarga_id             =   'idDetalleCarga';
-   public static $detalleCargaDescarga_cantidad       =   'Cantidad';
+   public static $detalleCargaDescarga_carga          =   'Carga';
+   public static $detalleCargaDescarga_descarga       =   'Descarga';
    public static $detalleCargaDescarga_idCarga        =   'Carga_idCarga';
    public static $detalleCargaDescarga_idArticulo     =   'Articulo_IdArticulo';
 
