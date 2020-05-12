@@ -225,7 +225,12 @@ function ejecutarCargaDescarga(){
             throw new Exception('Received content contained invalid JSON!');
         }
 
+
+
+
         //El código que sigue se ejecuta sólo si se cumplen la condiciones más arriba
+
+        $data = new stdClass();
         
         // SE LEEN LOS VALORES DE LAS CLAVES CONTENIDAS EN LA SOLICITUD
 
@@ -292,8 +297,14 @@ function ejecutarCargaDescarga(){
                 
                     //echo $resultado;
                 
+                    
+
+                    $tanda = new stdClass();
+                    $tanda->idCarga = $resultado[0];
+
                     $cargaDescarga->setIdCarga((int)$resultado[0]);
                 
+                    $detalleCarga = new stdClass();
 
                     for($j=1;$j<count($artículo);$j++){
                     
@@ -338,9 +349,22 @@ function ejecutarCargaDescarga(){
                             
                         );
                         
-                        //echo $resultado;
+                        
+                        $detalleCarga->id[] = $resultado[0];
+                        
+
+
+                        //print_r ($resultado);
                     }
-                    
+
+
+
+
+                    $tanda->detalleCarga = $detalleCarga;
+
+
+                    $data->tandas[] = $tanda;
+                    //$data->detalleCarga = $detalleCarga;
                 }
 
             
@@ -364,11 +388,11 @@ function ejecutarCargaDescarga(){
 
 
 
-        $data = new stdClass();
+        
         $response = new stdClass();
         $response->exito = true;
-        //$data->resultado = $resultado;
-        //$response->data =$data;
+        
+        $response->data =$data;
         echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
 
 

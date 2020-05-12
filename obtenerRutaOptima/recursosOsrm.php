@@ -98,14 +98,15 @@ class recursosOsrm {
         return $data;
     }
 
-    private function crearSolicitudRouteYEnviar(){
+    public function crearSolicitudRouteYEnviar(){
         $ch = curl_init();
         $coordenadas = $this->traducirCoordenadasParaOsrm();
 
         $url = 'http://127.0.0.1:5000/route/v1/driving/';
         $url .= $coordenadas;
     
-        $anotation = '?annotations=distance';
+        //$anotation = '?annotations=distance';
+        $anotation = '?geometries=geojson&continue_straight=true&overview=full';
         $url .= $anotation;
     
     

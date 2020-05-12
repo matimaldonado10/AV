@@ -1,6 +1,6 @@
 <?php
 /**
- * ESTO ES UNA PRUEBA PARA OBTENER UNA MATRIZ DE DISTACIA DE X CANTIDAD DE CLIENTES
+ * OTIENE UNA MATRIZ DE DISTACIA DE X CANTIDAD DE CLIENTES
  * LOS CLIENTES NO SON REALES
  * TODOS LAS COORDENADAS SON CREADAS DE FORMA ALEATORIA
  */
@@ -13,6 +13,8 @@ class mainOsrm {
     private $matrizOsrm;
 
     private $arrayClientes;
+
+    private $ruta;
     
     public function __construct(){
 
@@ -41,7 +43,25 @@ class mainOsrm {
 
     
 
+    public function  solicitarEnrutamiento(){
+        
+       
+        try {
+
+            $this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
+
+            $ruta = $this->recursoOsrm-> crearSolicitudRouteYEnviar();
+
+            $this->setRuta($ruta);
     
+            
+            
+        } catch (Exception $mensajeDeExcepcion) {
+            echo 'Mensaje: '. $mensajeDeExcepcion->getMessage();
+        } 
+        
+
+    }
     
 
 
@@ -101,6 +121,26 @@ class mainOsrm {
     public function setArrayClientes(array $arrayClientes)
     {
         $this->arrayClientes = $arrayClientes;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of ruta
+     */ 
+    public function getRuta()
+    {
+        return $this->ruta;
+    }
+
+    /**
+     * Set the value of ruta
+     *
+     * @return  self
+     */ 
+    public function setRuta(String $ruta)
+    {
+        $this->ruta = $ruta;
 
         return $this;
     }

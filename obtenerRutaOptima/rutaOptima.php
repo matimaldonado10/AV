@@ -32,7 +32,7 @@ include_once ('jsonRutaOptimizada.php');
 
 
 class rutaOptima {
-    private $arrayDatosOsrm;
+    private $arrayDatosOsrm; // Tiene todos los datos de los repartidores y sus clientes
     private $arrayRepartidores;
     private $arrayDeClientesDeRepartidoresEnUnDia;
     private $cantidadDepositos;
@@ -101,11 +101,11 @@ class rutaOptima {
             $osrm->solicitarMatrizAlServidorOsrmConDepositoPorDefecto();
     
             $arrayObjetosDeOsrm[] = $osrm;
-            }
+        }
             
            
         
-
+        //guardo las instancias de OSRM en un array global
         $this->setArrayDatosOsrm($arrayObjetosDeOsrm);
     }
 
@@ -191,6 +191,8 @@ class rutaOptima {
 
     }
 
+    
+
 
     /**
      * SE SELECCIONAN CIERTOS DATOS DE LA SALIDA DE OSRM. 
@@ -204,7 +206,7 @@ class rutaOptima {
 
         $matriz = $this->getArrayDatosOsrm()[0]->getMatrizOsrm();
 
-        $nodosclientes = $this->obtenerNodosClientesDelRepartidorParaOptaplanner(0);
+        $nodosclientes = $this->obtenerNodosClientesDelRepartidorParaOptaplanner(0); //el parámetro cero corresponde al primer repartidor
         
         $dataSet = dataSet::construirInstanciaConParametros(
             'prueba',
@@ -245,43 +247,170 @@ class rutaOptima {
         $optaPlanner->getRecursos()->setNombreDataSet($this->getNombreDataSet());
 
         $resultado = $optaPlanner->iniciarSolicitudAlServidorOptaplanner();
-        $this->extraerDatosDelResultadoDeOptaplanner($resultado);
-
         
+        $arrayListaDeIdClientesRutaOptimizada = $this->obtenerListaDeIdClientesOrdenadosDeLaSolucionDeOptaplanner($resultado);
+
+       
+        $arrayDeClientesSedientos =  $this->crearArrayCoordenadasClientesOrdenados(0,$arrayListaDeIdClientesRutaOptimizada );
+
+        //echo ("lista de clientes sedientos ");
+        //print_r($arrayDeClientesSedientos);
+
+        return $arrayDeClientesSedientos;
+
+        //retorna un array con una lista de instacias coordenadasGeográficas de  clientes ordenadas
         
         
     } 
 
-    public function extraerDatosDelResultadoDeOptaplanner($resultadoDeOptaplanner){
+    public function obtenerListaDeIdClientesOrdenadosDeLaSolucionDeOptaplanner($resultadoDeOptaplanner){
         
-        $optaPlanner = new mainOptaplanner();
-
-        
-
-        if ($optaPlanner->esRespuestaValida($resultadoDeOptaplanner)) {
-
             $resultadoDeOptaplanner = json_decode($resultadoDeOptaplanner);
-            if ($resultadoDeOptaplanner->feasible == "true") {
 
-                $rutaDeClientesOptimizada = array();
+           // echo $resultadoDeOptaplanner->name;
+
             
-                $rutaDeClientesOptimizada = $resultadoDeOptaplanner->vehicleRouteList[0]->customerList;
+            if ($resultadoDeOptaplanner->feasible) {
 
+                $rutasDeRepartidores = array();
+            
+                $rutasDeRepartidores = $resultadoDeOptaplanner->vehicleRouteList;
+
+                if (!empty($rutasDeRepartidores)) {
+                    for ($i=0; $i <count($rutasDeRepartidores); $i++) { 
+                        # recorre los clientes de la ruta optimizada. $i=0 es la ruta
+                        //del primer repartidor y así sucesivamente.
+
+                        $listaDeClientes = array();
+
+                        $listaDeClientes = $rutasDeRepartidores[$i]->customerList;
+
+                        //$arrayDeIdClientesOrdenados = array();
+
+                        if (!empty($listaDeClientes)) {
+                            # recorremos la lista de objetos clientes
+                            for ($j=0; $j <count($listaDeClientes) ; $j++) { 
+                                /**
+                                 * recorro la lista de clientes y utilizo los 
+                                 * "locationName" que son los idCliente de la base 
+                                 * de datos para identificar a los clientes.
+                                */
+                                
+                                
+                                $arrayDeIdClientesOrdenados[] = $listaDeClientes[$j]->locationName;
+                                
+                            }
+                        }
+                    }
+                        //print_r($arrayDeIdClientesOrdenados);
+                        return $arrayDeIdClientesOrdenados;
+
+                        //ESTO FUNCIONA PARA UN SÓLO REPARTIDOR
+
+                }
+                else {
+                    # lista de rutas vacía
+                    echo ("Lista de rutas se encuentra vacía");
+                }
                 
 
             }else {
                 //HACER crear archivo de error
+                echo ("no funcionó la lectura del json");
             }
-        }else {
-            //HACER crear archivo de error
-        }
 
+       
+        
 
         
             
             
       
     }
+
+    public function crearArrayCoordenadasClientesOrdenados($indiceDeRepartidor, $arrayIdClienteRutaOptimizada ){
+        /**
+         * Crea una array de objetos coordenadas geográficas de los clientes del repartidor
+         * Estos se encuentran ordenados por la solución de OPTAPLANNER
+         * Devuelve el array
+         * 
+         * 
+         * 
+         */  
+       
+
+
+        /**
+         *  $recurso = new recursosOsrm();
+         *   $arrayDeNodosClientes = array();
+         *       $depositos = $recurso->getDeposito();
+         *      $nombresDeposito = $recurso->getNombreDeposito();
+        *
+        *       $this->setCantidadDepositos(count($depositos));
+        *   for ($i=0; $i < $this->getCantidadDepositos(); $i++) { 
+        *          $arrayDeNodosClientes[] = array($depositos[$i],$nombresDeposito[$i]);
+        *     }
+        */
+      
+
+        for ($j=0; $j < count($arrayIdClienteRutaOptimizada); $j++) { 
+            # code...
+
+            for ($i=0; $i <count($this->getArrayDeClientesDeRepartidoresEnUnDia()) ; $i++) {
+
+                if ($this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$diaDeReparto_idRepartidor] === $this->getArrayRepartidores()[$indiceDeRepartidor][constantesDB::$repartidor_id]) {
+                    
+                    if ($this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$clientesDirectosDiaDeReparto_idCliente] == $arrayIdClienteRutaOptimizada[$j]) {
+                        # code...
+                        $arrayDeNodosClientes[] = coordenadasGeograficas::construirObjetoConLatitudLongitud($this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$direccion_latitud],$this->getArrayDeClientesDeRepartidoresEnUnDia()[$i][constantesDB::$direccion_longitud]);
+
+                    }
+
+                }
+
+
+            } 
+        }
+      
+
+
+        return $arrayDeNodosClientes;
+
+    }
+    
+    public function solicitarEnrutamientoOsrm($listaDeClientesOrdenada){
+
+        $arrayObjetosDeOsrm = array();
+  /** 
+   * for ($indice=0; $indice < 1; $indice++) { 
+
+           
+
+            $osrm = new mainOsrm();
+            $recurso = new recursosOsrm();
+
+            $osrm->setRecursoOsrm($recurso);
+            $osrm->setArrayClientes($listaDeClientesOrdenada);
+
+            $osrm->solicitarEnrutamiento();
+        
+            $arrayObjetosDeOsrm[] = $osrm;
+    }
+    */     
+        
+
+            $osrm = new mainOsrm();
+            $recurso = new recursosOsrm();
+
+            $osrm->setRecursoOsrm($recurso);
+            $osrm->setArrayClientes($listaDeClientesOrdenada);
+
+            $osrm->solicitarEnrutamiento();
+        
+            //$arrayObjetosDeOsrm[] = $osrm;
+
+            return $osrm;
+}
 
 /**
  * GETTERS AND SETTERS
@@ -413,15 +542,14 @@ $rutaOptima = new rutaOptima();
 $rutaOptima->iniciarBusquedaDeClientes();
 $rutaOptima->enviarClientesAlServidorOsrm();
 
-print_r($rutaOptima->getArrayDatosOsrm()[0]->getRecursoOsrm()->getResponseOsrm());
-
-echo('<br>');
-echo('<br>');
-echo('<br>');
-echo('<br>');
+//print_r($rutaOptima->getArrayDatosOsrm()[0]->getRecursoOsrm()->getResponseOsrm());
 
 $rutaOptima->transformarDatosParaOptaplanner();
-$rutaOptima->enviarDataSetAOptaplannerParaOptimizacionDeRutas();
+$listaDeCoordenadasClientesOrdenada = $rutaOptima->enviarDataSetAOptaplannerParaOptimizacionDeRutas();
+
+$rutaSolucion = $rutaOptima->solicitarEnrutamientoOsrm($listaDeCoordenadasClientesOrdenada);
+
+echo $rutaSolucion-> getRuta();
 
 
 

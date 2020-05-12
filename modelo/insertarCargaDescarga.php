@@ -1,7 +1,7 @@
 <?php
 /*
-	
-	RECIBE LOS DATOS DE UNA PERSONA (DNI, APELLIDO, NOMBRE, TELEFONO, MAIL) E INSERTA EN LA TABLA PERSONA DE AQUA VITAL
+	Clase que sirve para utilizar el helper de mysqlcrud y realizar inserciones en la BD
+	Permite insertar CargasDescargas y sus detalles
 
 */
 include_once('/home/mati/git-repositorios/av/path.php');
@@ -36,8 +36,8 @@ class insertarCargaDescarga {
 		
 		$res = $db->getResult(); 	
 		$db->disconnect();
-		print_r($res);
-		echo "<br> ";
+		//print_r($res);
+		//echo "<br> ";
 		return $res;
 
 
@@ -61,7 +61,8 @@ class insertarCargaDescarga {
 
 		$res = $db->getResult();	
 		$db->disconnect();
-		print_r($res);
+		return $res;
+		//print_r($res);
 	}
 	
 }
