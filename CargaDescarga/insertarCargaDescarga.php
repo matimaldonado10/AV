@@ -4,7 +4,9 @@
 	RECIBE LOS DATOS DE UNA PERSONA (DNI, APELLIDO, NOMBRE, TELEFONO, MAIL) E INSERTA EN LA TABLA PERSONA DE AQUA VITAL
 
 */
-include_once ('class/mysql_crud.php');
+include_once('../path.php');
+include_once(path::dirMysql);
+include_once(path::dirConstantesDB);
 class insertarCargaDescarga {
 	
 

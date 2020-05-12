@@ -6,5 +6,10 @@ class path {
 
     const dirConstantesDB = self::dirProyecto.'modelo/constantesDB.php';
     
+    const dirInterface = self::dirProyecto.'modelo/interface.php';
+
+    const dirPersona = self::dirProyecto.'modelo/persona.php';
+    const dirSupervisor = self::dirProyecto.'modelo/supervisor.php';
+
 
 }

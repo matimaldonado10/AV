@@ -34,9 +34,14 @@ class tablas
 	{
 		$db = new Database();
 		$db->connect();
-		$db->select('repartidor','Persona_IdRepartidor, Persona_DNIRepartidor',NULL,NULL,'Persona_IdRepartidor DESC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+
+		$where = constantesDB::$repartidor_id.' = '.constantesDB::$persona_id.' AND  '.constantesDB::$repartidor_dni.' = '.constantesDB::$persona_dni;
+
+
+		$db->select('repartidor','Persona_IdRepartidor, Persona_DNIRepartidor, Nombre, Apellido','persona',$where,'Persona_IdRepartidor DESC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$Regristros = $db->getResult();
 		$db->disconnect();
+
 		return $Regristros;
 
 

@@ -1,8 +1,21 @@
 <?php
 include_once ('persona.php');
-class repartidor extends persona{
+include_once ('interface.php');
+
+class repartidor extends persona implements interfaceArticulos{
     private $usuario;
     private $contraseña;
+
+
+
+    function obtenerTablaDeArticulos(){
+        $db = new Database();
+		$db->connect();
+		$db->select('articulo','IdArticulo, Nombre, Precio',NULL,NULL,'IdArticulo ASC'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$Registros = $db->getResult();
+		$db->disconnect();
+        return $Registros;
+    }
 
     /**
      * Get the value of usuario

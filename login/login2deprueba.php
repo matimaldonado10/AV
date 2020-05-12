@@ -3,12 +3,44 @@ include_once('../path.php');
 
 include_once(path::dirProyecto.'/login/buscarUsuario.php');
 include_once(path::dirProyecto.'/login/tablas.php');
+include_once('/home/mati/git-repositorios/av/modelo/interface.php');
+include_once(path::dirSupervisor);
 
 
 
-$username = $_POST["usuario"];
-$password = $_POST["contraseña"];
-$primerLogin= $_POST["intento"];
+/**EL SIGUIENTE BLOQUE DE CÓDIGO SIRVE PARA ASEGURARSE QUE LA SOLICITUD CUMPLA CIERTAS CONDICIONES
+      * Y NO SIGA EJECUTANDO CON UNA SOLICITUD ERRONEA
+      */
+
+      //Make sure that it is a POST request.
+      if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+        throw new Exception('Request method must be POST!');
+    }
+    
+    //Make sure that the content type of the POST request has been set to application/json
+    $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+    if(strcasecmp($contentType, 'application/json') != 0){
+        throw new Exception('Content type must be: application/json');
+    }
+    
+    //Receive the RAW post data.
+    $content = trim(file_get_contents("php://input"));
+    
+    //Attempt to decode the incoming RAW post data from JSON.
+    $decoded = json_decode($content, true);
+    
+    //If json_decode failed, the JSON is invalid.
+    if(!is_array($decoded)){
+        throw new Exception('Received content contained invalid JSON!');
+    }
+
+
+
+
+
+$username = $decoded["usuario"];
+$password = $decoded["contraseña"];
+$primerLogin= $decoded["intento"];
 
 $userlogin = new buscarUsuario();
 $tablas = new tablas();
@@ -74,6 +106,15 @@ function codificarCaracteresAUtf8($RegistroClientesRepartidor){
           return $RegistroClientesRepartidor;
 }
 
+function obtenerArtículos($persona) {
+  $arrayDeArticulos =array();
+    if ($persona instanceof interfaceArticulos) {
+      $arrayDeArticulos = $persona->obtenerTablaDeArticulos();
+    }
+    
+  return $arrayDeArticulos;
+}
+
 //verifica que la contraseña y usuario contengan un valor
 if ($password!= NULL && $username!= NULL) {
 
@@ -115,6 +156,10 @@ if ($login)
         $dni= $RegistroSupervisor[0]["Persona_DNISupervisor"];
         $data->dni = $dni;
         $data->msj = "supervisor";
+        $data->repartidores = $tablas->obtenerRepartidores();
+        $data->articulos = obtenerArtículos(new supervisor());
+        //var_dump($data->articulos);
+        
       }
       else
       {
@@ -199,7 +244,7 @@ if ($login)
 
 
 
-//count($RegistroClientesRepartidor)-1
+      //count($RegistroClientesRepartidor)-1
           
           $data->clientes = $registroClientesFinal;
         }
@@ -222,9 +267,9 @@ else
   //$response["repartidor"]= $RegistroRepartidor;
 }
 
-$response->data = $data;
-
+$response->data =$data;
 echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK );
+
 
 
 /*
