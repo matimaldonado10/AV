@@ -106,7 +106,8 @@ class recursosOsrm {
         $url .= $coordenadas;
     
         //$anotation = '?annotations=distance';
-        $anotation = '?geometries=geojson&continue_straight=true&overview=full';
+        //$anotation = '?geometries=geojson&continue_straight=true&overview=full';
+        $anotation = '?geometries=polyline6&continue_straight=true&overview=full&steps=true';
         $url .= $anotation;
     
     
