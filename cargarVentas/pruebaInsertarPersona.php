@@ -12,17 +12,17 @@ class insertarTablaVenta
 	{
 		$db = new Database();
 		$db->connect();
-		$envasesVacios   = $db->escapeString($envasesVacios);
-		$fechaVenta      = $db->escapeString($fechaVenta); // Escape any input before insert
-		$pago            = $db->escapeString($pago);
-		$idCliente       = $db->escapeString($idCliente);
-		$dniCliente      = $db->escapeString($dniCliente);
-		$idDistribuidor  = $db->escapeString($idDistribuidor);
+		$envasesVacios = $db->escapeString($envasesVacios);
+		$fechaVenta = $db->escapeString($fechaVenta); // Escape any input before insert
+		$pago = $db->escapeString($pago);
+		$idCliente = $db->escapeString($idCliente);
+		$dniCliente = $db->escapeString($dniCliente);
+		$idDistribuidor = $db->escapeString($idDistribuidor);
 		$dniDistribuidor = $db->escapeString($dniDistribuidor); // Escape any input before insert
-		$idRepartidor    = $db->escapeString($idRepartidor);
-		$dniRepartidor   = $db->escapeString($dniRepartidor);
-		$comprobado      = $db->escapeString($comprobado);
-		$total           = $db->escapeString($total);
+		$idRepartidor = $db->escapeString($idRepartidor);
+		$dniRepartidor = $db->escapeString($dniRepartidor);
+		$comprobado = $db->escapeString($comprobado);
+		$total = $db->escapeString($total);
 
 		switch ($caso) {
 		case '1':
@@ -66,9 +66,9 @@ class insertarTablaVenta
 	{
 		$db = new Database();
 		$db->connect();
-		$cantidad   = $db->escapeString($cantidad);
-		$subtotal   = $db->escapeString($subtotal); // Escape any input before insert
-		$idVenta    = $db->escapeString($idVenta);
+		$cantidad = $db->escapeString($cantidad);
+		$subtotal = $db->escapeString($subtotal); // Escape any input before insert
+		$idVenta = $db->escapeString($idVenta);
 		$idArticulo = $db->escapeString($idArticulo);
 
 		$db->insert('detalleventa', array('Cantidad' => $cantidad, 'SubTotal' => $subtotal, 'Venta_IdVentas' => $idVenta, 'Articulo_IdArticulo' => $idArticulo));

@@ -2,7 +2,7 @@
 // Lee el fichero en una variable,
 // y convierte su contenido a una estructura de datos
 $str_datos = file_get_contents("datos.json");
-$datos     = json_decode($str_datos, true);
+$datos = json_decode($str_datos, true);
 
 echo "Aficiones del jefe: " . $datos["responsable"]["Aficiones"][0] . "n";
 

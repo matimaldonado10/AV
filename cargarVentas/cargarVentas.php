@@ -5,17 +5,17 @@ include_once 'tablas.php';
 include_once 'random.php';
 include_once 'actualizarVenta.php';
 
-$insertar   = new insertarTablaVenta();
-$azar       = new random();
-$Tabla      = new tablas();
+$insertar = new insertarTablaVenta();
+$azar = new random();
+$Tabla = new tablas();
 $actualizar = new actualizar();
 
 $cantidadVentas = 1; // indicas las cantidad de ventas ha generar
 
-$registrosClientes       = $Tabla->obtenerClientes();
-$registrosRepartidores   = $Tabla->obtenerRepartidores();
+$registrosClientes = $Tabla->obtenerClientes();
+$registrosRepartidores = $Tabla->obtenerRepartidores();
 $registrosDistribuidores = $Tabla->obtenerDistribuidores();
-$registrosArticulos      = $Tabla->obtenerArticulos();
+$registrosArticulos = $Tabla->obtenerArticulos();
 
 /*
 Comienza la iteración. En cada una, se inserta una tupla en la tabla "ventas" y también uno o más de una tupla en la "tabla detalle de venta" correspondiente al id de venta.
@@ -23,57 +23,57 @@ Comienza la iteración. En cada una, se inserta una tupla en la tabla "ventas" y
 
 echo "Clientes";
 echo "<br>";
-print_r( $registrosClientes );
+print_r($registrosClientes);
 echo "<br>";
 echo "Repartidores";
 echo "<br>";
-print_r( $registrosRepartidores );
+print_r($registrosRepartidores);
 echo "<br>";
 echo "Distribuidores";
 echo "<br>";
-print_r( $registrosDistribuidores );
+print_r($registrosDistribuidores);
 echo "<br>";
 
-for ( $i = 0; $i < $cantidadVentas; $i++ ) {
+for ($i = 0; $i < $cantidadVentas; $i++) {
 
-	$cantidadEnvases = $azar->alAzar( 0, 10 );
-	$fechaVenta      = $azar->alAzarFecha();
-	$pago            = $azar->alAzarPago();
-	$total           = 0;
-	$comprobado      = 0;
+	$cantidadEnvases = $azar->alAzar(0, 10);
+	$fechaVenta = $azar->alAzarFecha();
+	$pago = $azar->alAzarPago();
+	$total = 0;
+	$comprobado = 0;
 
-	$caso = $azar->alAzar( 1, 7 );
+	$caso = $azar->alAzar(1, 7);
 
-	switch ( $caso )
+	switch ($caso)
 	// Existen 6 posibles casos de inserción en la tabla de ventas. Se elige uno al azar
 	{
 	case 1:
 		// prepara la venta de un cliente y repartidor
 
-		$idDistribuidor  = null;
+		$idDistribuidor = null;
 		$dniDistribuidor = null;
 
-		$filaCliente = $azar->alAzar( 0, count( $registrosClientes ) -
-			1 );
+		$filaCliente = $azar->alAzar(0, count($registrosClientes) -
+			1);
 
 		$idCliente = $registrosClientes[$filaCliente][
 			"Persona_IdCliente"];
 		$dniCliente = $registrosClientes[$filaCliente][
 			"Persona_DNICliente"];
 
-		$filaRepartidor = $azar->alAzar( 0, count(
-			$registrosRepartidores ) - 1 );
+		$filaRepartidor = $azar->alAzar(0, count(
+			$registrosRepartidores) - 1);
 
 		$idRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_IdRepartidor"];
 		$dniRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_DNIRepartidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
 			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-			$caso 
+			$caso
 		);
 		echo "<br>";
 		echo "insertado en  ventas. CLIENTE/REPARTIDOR";
@@ -82,30 +82,30 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 	case 2:
 		// prepara la venta de un cliente y distribuidor. Este es un caso no permitido en la BD
 
-		$idRepartidor  = null;
+		$idRepartidor = null;
 		$dniRepartidor = null;
 
-		$filaCliente = $azar->alAzar( 0, count( $registrosClientes ) -
-			1 );
+		$filaCliente = $azar->alAzar(0, count($registrosClientes) -
+			1);
 
 		$idCliente = $registrosClientes[$filaCliente][
 			"Persona_IdCliente"];
 		$dniCliente = $registrosClientes[$filaCliente][
 			"Persona_DNICliente"];
 
-		$filaDistribuidor = $azar->alAzar( 0, count(
-			$registrosDistribuidores ) - 1 );
+		$filaDistribuidor = $azar->alAzar(0, count(
+			$registrosDistribuidores) - 1);
 
 		$idDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_IdDistribuidor"];
 		$dniDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_DNIDistribuidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
 			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-			$caso );
+			$caso);
 		echo "<br>";
 		echo "insertado en  ventas. CLIENTE/DISTRIBUIDOR NO PERMITIDO";
 		echo "<br>";
@@ -114,40 +114,40 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 	case 3:
 		// prepara la venta de un cliente, distribuidor y repartidor. Este es un caso no permitido en la BD
 
-		$filaCliente = $azar->alAzar( 0, count( $registrosClientes ) -
-			1 );
+		$filaCliente = $azar->alAzar(0, count($registrosClientes) -
+			1);
 
 		$idCliente = $registrosClientes[$filaCliente][
 			"Persona_IdCliente"];
 		$dniCliente = $registrosClientes[$filaCliente][
 			"Persona_DNICliente"];
 
-		$filaRepartidor = $azar->alAzar( 0, count(
-			$registrosRepartidores ) - 1 );
+		$filaRepartidor = $azar->alAzar(0, count(
+			$registrosRepartidores) - 1);
 
 		$idRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_IdRepartidor"];
 		$dniRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_DNIRepartidor"];
 
-		$filaDistribuidor = $azar->alAzar( 0, count(
-			$registrosDistribuidores ) - 1 );
+		$filaDistribuidor = $azar->alAzar(0, count(
+			$registrosDistribuidores) - 1);
 
 		$idDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_IdDistribuidor"];
 		$dniDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_DNIDistribuidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
 			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-			$caso );
+			$caso);
 
 		echo "<br>";
 		echo
 
-	    "insertado en  ventas. CLIENTE/REPARTIDOR/REPARTIDOR NO PERMITIDO";
+			"insertado en  ventas. CLIENTE/REPARTIDOR/REPARTIDOR NO PERMITIDO";
 		echo "<br>";
 
 		break;
@@ -156,25 +156,25 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 
 		// prepara la venta de un cliente. Este caso simula la venta en el negocio
 
-		$idDistribuidor  = null;
+		$idDistribuidor = null;
 		$dniDistribuidor = null;
 
-		$idRepartidor  = null;
+		$idRepartidor = null;
 		$dniRepartidor = null;
 
-		$filaCliente = $azar->alAzar( 0, count( $registrosClientes ) -
-			1 );
+		$filaCliente = $azar->alAzar(0, count($registrosClientes) -
+			1);
 
 		$idCliente = $registrosClientes[$filaCliente][
 			"Persona_IdCliente"];
 		$dniCliente = $registrosClientes[$filaCliente][
 			"Persona_DNICliente"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
-					     $idDistribuidor, $dniDistribuidor,
+			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-									$caso );
+			$caso);
 		echo "<br>";
 		echo "insertado en  ventas. CLIENTE";
 		echo "<br>";
@@ -184,25 +184,25 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 	case 5:
 		// prepara la venta de un Repartidor. Este es un caso no permitido en la BD
 
-		$idDistribuidor  = null;
+		$idDistribuidor = null;
 		$dniDistribuidor = null;
 
-		$idCliente  = null;
+		$idCliente = null;
 		$dniCliente = null;
 
-		$filaRepartidor = $azar->alAzar( 0, count(
-			$registrosRepartidores ) - 1 );
+		$filaRepartidor = $azar->alAzar(0, count(
+			$registrosRepartidores) - 1);
 
 		$idRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_IdRepartidor"];
 		$dniRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_DNIRepartidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
-					     $idDistribuidor, $dniDistribuidor,
+			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-									$caso );
+			$caso);
 		echo "<br>";
 		echo "insertado en  ventas. REPARTIDOR NO PERMITIDO";
 		echo "<br>";
@@ -213,30 +213,30 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 
 		// prepara la venta de un repartidor y distribuidor.
 
-		$idCliente  = null;
+		$idCliente = null;
 		$dniCliente = null;
 
-		$filaDistribuidor = $azar->alAzar( 0, count(
-			$registrosDistribuidores ) - 1 );
+		$filaDistribuidor = $azar->alAzar(0, count(
+			$registrosDistribuidores) - 1);
 
 		$idDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_IdDistribuidor"];
 		$dniDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_DNIDistribuidor"];
 
-		$filaRepartidor = $azar->alAzar( 0, count(
-			$registrosRepartidores ) - 1 );
+		$filaRepartidor = $azar->alAzar(0, count(
+			$registrosRepartidores) - 1);
 
 		$idRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_IdRepartidor"];
 		$dniRepartidor = $registrosRepartidores[$filaRepartidor][
 			"Persona_DNIRepartidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
-					     $idDistribuidor, $dniDistribuidor,
+			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-									$caso );
+			$caso);
 
 		echo "<br>";
 		echo "insertado en  ventas. DISTRIBUIDOR/REPARTIDOR";
@@ -248,24 +248,24 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 
 		// prepara la venta de un distribuidor.
 
-		$idCliente     = null;
-		$dniCliente    = null;
-		$idRepartidor  = null;
+		$idCliente = null;
+		$dniCliente = null;
+		$idRepartidor = null;
 		$dniRepartidor = null;
 
-		$filaDistribuidor = $azar->alAzar( 0, count(
-			$registrosDistribuidores ) - 1 );
+		$filaDistribuidor = $azar->alAzar(0, count(
+			$registrosDistribuidores) - 1);
 
 		$idDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_IdDistribuidor"];
 		$dniDistribuidor = $registrosDistribuidores[$filaDistribuidor][
 			"Persona_DNIDistribuidor"];
 
-		$RegistroIdVenta = $insertar->insertarVenta( $cantidadEnvases,
+		$RegistroIdVenta = $insertar->insertarVenta($cantidadEnvases,
 			$fechaVenta, $pago, $idCliente, $dniCliente,
-					     $idDistribuidor, $dniDistribuidor,
+			$idDistribuidor, $dniDistribuidor,
 			$idRepartidor, $dniRepartidor, $comprobado, $total,
-									$caso );
+			$caso);
 
 		echo "<br>";
 		echo "insertado en  ventas. DISTRIBUIDOR";
@@ -277,32 +277,32 @@ for ( $i = 0; $i < $cantidadVentas; $i++ ) {
 	// obtengo el id de la última consulta a la BD
 	//$RegistroIdVenta = $Tabla->obtenerIdVentas();
 	echo "<br>";
-	print_r( $RegistroIdVenta );
+	print_r($RegistroIdVenta);
 	// cantidad de inserciones en la tabla Detalle Venta
-	$iteracionDetalle = $azar->alAzar( 1, 2 );
-	$idVenta          = $RegistroIdVenta[0];
+	$iteracionDetalle = $azar->alAzar(1, 2);
+	$idVenta = $RegistroIdVenta[0];
 
-	print_r( $registrosArticulos );
+	print_r($registrosArticulos);
 
-	for ( $x = 0; $x < $iteracionDetalle; $x++ ) {
+	for ($x = 0; $x < $iteracionDetalle; $x++) {
 
 		$indice = $azar->alAzar
-		( 0, count( $registrosArticulos) - 1 );
-		$idArticulo      = $registrosArticulos[$indice]["IdArticulo"];
-		$CantidadDetalle = $azar->alAzar( 1, 10 );
-		$subtotal        = $CantidadDetalle * $registrosArticulos
-							[$indice]["Precio"];
+			(0, count($registrosArticulos) - 1);
+		$idArticulo = $registrosArticulos[$indice]["IdArticulo"];
+		$CantidadDetalle = $azar->alAzar(1, 10);
+		$subtotal = $CantidadDetalle * $registrosArticulos
+			[$indice]["Precio"];
 		$total = $total + $subtotal;
 		$insertar->InsertarDetalleVenta(
 			$CantidadDetalle,
 			$subtotal,
-			$idVenta, 
-			$idArticulo 
+			$idVenta,
+			$idArticulo
 		);
 
 	}
 
-	$actualizar->actualizarVenta( $idVenta, $total );
+	$actualizar->actualizarVenta($idVenta, $total);
 
 /*
 print_r($dniEnviar);

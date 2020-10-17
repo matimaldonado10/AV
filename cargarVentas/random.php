@@ -21,7 +21,7 @@ class random
 		$max = strtotime("2017-06-08");
 
 		$numero = mt_rand($min, $max);
-		$fecha  = date("Y-m-d H:i:s", $numero);
+		$fecha = date("Y-m-d H:i:s", $numero);
 
 		return $fecha;
 	}
