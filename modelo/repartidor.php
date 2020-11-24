@@ -2,7 +2,7 @@
 include_once ('persona.php');
 include_once ('interface.php');
 
-class repartidor extends persona implements interfaceArticulos{
+class repartidor extends persona {
     private $usuario;
     private $contraseña;
 

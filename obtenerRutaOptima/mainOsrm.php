@@ -4,144 +4,135 @@
  * LOS CLIENTES NO SON REALES
  * TODOS LAS COORDENADAS SON CREADAS DE FORMA ALEATORIA
  */
-include_once ("recursosOsrm.php");
+include_once "recursosOsrm.php";
 
-class mainOsrm {
+class mainOsrm
+{
 
-    private $recursoOsrm;
+	private $recursoOsrm;
 
-    private $matrizOsrm;
+	private $matrizOsrm;
 
-    private $arrayClientes;
+	private $arrayClientes;
 
-    private $ruta;
-    
-    public function __construct(){
+	private $ruta;
 
-    }
+	public function __construct()
+	{
 
+	}
 
-    public function  solicitarMatrizAlServidorOsrmConDepositoPorDefecto(){
-        
-       
-        try {
+	public function solicitarMatrizAlServidorOsrmConDepositoPorDefecto()
+	{
 
-            $this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
+		try {
 
-            $matriz = $this->recursoOsrm-> obtenerMatrizDeDistancia();
+			$this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
 
-            $this->setMatrizOsrm($matriz);
-    
-            
-            
-        } catch (Exception $mensajeDeExcepcion) {
-            echo 'Mensaje: '. $mensajeDeExcepcion->getMessage();
-        } 
-        
+			$matriz = $this->recursoOsrm->obtenerMatrizDeDistancia();
 
-    }
+			$this->setMatrizOsrm($matriz);
 
-    
+		} catch (Exception $mensajeDeExcepcion) {
+			echo 'Mensaje: ' . $mensajeDeExcepcion->getMessage();
+		}
 
-    public function  solicitarEnrutamiento(){
-        
-       
-        try {
+	}
 
-            $this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
+	public function solicitarEnrutamiento()
+	{
 
-            $ruta = $this->recursoOsrm-> crearSolicitudRouteYEnviar();
+		try {
 
-            $this->setRuta($ruta);
-    
-            
-            
-        } catch (Exception $mensajeDeExcepcion) {
-            echo 'Mensaje: '. $mensajeDeExcepcion->getMessage();
-        } 
-        
+			$this->recursoOsrm->setCoordenadasDeClientes($this->getArrayClientes());
 
-    }
-    
+			$ruta = $this->recursoOsrm->crearSolicitudRouteYEnviar();
 
+			$this->setRuta($ruta);
 
-    /**
-     * Get the value of recursoOsrm
-     */ 
-    public function getRecursoOsrm()
-    {
-        return $this->recursoOsrm;
-    }
+		} catch (Exception $mensajeDeExcepcion) {
+			echo 'Mensaje: ' . $mensajeDeExcepcion->getMessage();
+		}
 
-    /**
-     * Set the value of recursoOsrm
-     *
-     * @return  self
-     */ 
-    public function setRecursoOsrm(recursosOsrm $recursoOsrm)
-    {
-        $this->recursoOsrm = $recursoOsrm;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get the value of recursoOsrm
+	 */
+	public function getRecursoOsrm()
+	{
+		return $this->recursoOsrm;
+	}
 
-    /**
-     * Get the value of matrizOsrm
-     */ 
-    public function getMatrizOsrm()
-    {
-        return $this->matrizOsrm;
-    }
+	/**
+	 * Set the value of recursoOsrm
+	 *
+	 * @return  self
+	 */
+	public function setRecursoOsrm(recursosOsrm $recursoOsrm)
+	{
+		$this->recursoOsrm = $recursoOsrm;
 
-    /**
-     * Set the value of matrizOsrm
-     *
-     * @return  self
-     */ 
-    public function setMatrizOsrm(array $matrizOsrm)
-    {
-        $this->matrizOsrm = $matrizOsrm;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get the value of matrizOsrm
+	 */
+	public function getMatrizOsrm()
+	{
+		return $this->matrizOsrm;
+	}
 
-    /**
-     * Get the value of arrayClientes
-     */ 
-    public function getArrayClientes()
-    {
-        return $this->arrayClientes;
-    }
+	/**
+	 * Set the value of matrizOsrm
+	 *
+	 * @return  self
+	 */
+	public function setMatrizOsrm(array $matrizOsrm)
+	{
+		$this->matrizOsrm = $matrizOsrm;
 
-    /**
-     * Set the value of arrayClientes
-     *
-     * @return  self
-     */ 
-    public function setArrayClientes(array $arrayClientes)
-    {
-        $this->arrayClientes = $arrayClientes;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get the value of arrayClientes
+	 */
+	public function getArrayClientes()
+	{
+		return $this->arrayClientes;
+	}
 
-    /**
-     * Get the value of ruta
-     */ 
-    public function getRuta()
-    {
-        return $this->ruta;
-    }
+	/**
+	 * Set the value of arrayClientes
+	 *
+	 * @return  self
+	 */
+	public function setArrayClientes(array $arrayClientes)
+	{
+		$this->arrayClientes = $arrayClientes;
 
-    /**
-     * Set the value of ruta
-     *
-     * @return  self
-     */ 
-    public function setRuta(String $ruta)
-    {
-        $this->ruta = $ruta;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get the value of ruta
+	 */
+	public function getRuta()
+	{
+		return $this->ruta;
+	}
+
+	/**
+	 * Set the value of ruta
+	 *
+	 * @return  self
+	 */
+	public function setRuta(String $ruta)
+	{
+		$this->ruta = $ruta;
+
+		return $this;
+	}
 }
